@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ServerManager : NSObject
+typedef void(^createPartySuccessBlock)(NSString *partyName, NSString *partyID);
+typedef void(^createPartyFailureBlock)(NSError *error);
 
+@interface ServerManager : NSObject
+- (void) createPartyWithName: (NSString *) partyName andSuccessBlock: (createPartySuccessBlock) successBlock andFailureBlock:(createPartyFailureBlock) failureBlock;
 @end
