@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @class SpotifyManager;
+@class ServerManager;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) SpotifyManager *spotifyManager;
-
+@property (readonly, nonatomic) SpotifyManager *spotifyManager;
+@property (readonly, nonatomic) ServerManager *serverManager;
 @end
 

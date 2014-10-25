@@ -8,9 +8,11 @@
 
 #import "AppDelegate.h"
 #import "SpotifyManager.h"
+#import "ServerManager.h"
 
 @interface AppDelegate ()
-
+@property (strong, nonatomic) SpotifyManager *spotifyManager;
+@property (strong, nonatomic) ServerManager *serverManager;
 @end
 
 @implementation AppDelegate
@@ -18,7 +20,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.spotifyManager = [SpotifyManager new];
-    
+    self.serverManager = [ServerManager new];
     return YES;
 }
 

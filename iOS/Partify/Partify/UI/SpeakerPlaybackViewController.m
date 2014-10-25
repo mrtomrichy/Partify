@@ -7,31 +7,68 @@
 //
 
 #import "SpeakerPlaybackViewController.h"
+#import <Spotify/Spotify.h>
+#import "SpotifyManager.h"
+#import "AppDelegate.h"
 
-@interface SpeakerPlaybackViewController ()
-
+@interface SpeakerPlaybackViewController () <SPTAudioStreamingPlaybackDelegate>
+@property (nonatomic, strong) SpotifyManager *spotifyManager;
+@property (nonatomic, weak) AppDelegate *appD;
+@property (nonatomic, strong) SPTAudioStreamingController *player;
 @end
 
 @implementation SpeakerPlaybackViewController
 
-- (void)viewDidLoad {
+
+- (void) viewDidLoad
+{
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    self.appD = [UIApplication sharedApplication].delegate;
+    self.spotifyManager = self.appD.spotifyManager;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+-(void)playTrack {
+    
+    if (self.player == nil) {
+        self.player = [SPTAudioStreamingController new];
+        self.player.playbackDelegate = self;
+    }
+    
+    [self.player loginWithSession:self.spotifyManager.currentSession callback:^(NSError *error) {
+        
+        if (error != nil) {
+            NSLog(@"*** Enabling playback got error: %@", error);
+            return;
+        }
+        
+        [SPTRequest requestItemAtURI:[NSURL URLWithString:@"spotify:album:2Z51EnLF4Nps4LmulSQPnn"]
+                         withSession:self.spotifyManager.currentSession
+                            callback:^(NSError *error, id object) {
+                                
+                                if (error != nil) {
+                                    NSLog(@"*** Album lookup got error %@", error);
+                                    return;
+                                }
+                                
+                                [self.player playTrackProvider:(id <SPTTrackProvider>)object callback:nil];
+                                
+                            }];
+    }];
 }
 
-/*
-#pragma mark - Navigation
+#pragma mark - Track Player Delegates
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didReceiveMessage:(NSString *)message {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Message from Spotify"
+                                                        message:message
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    [alertView show];
 }
-*/
 
+- (void) audioStreaming:(SPTAudioStreamingController *)audioStreaming didChangeToTrack:(NSDictionary *)trackMetadata {
+    NSLog(@"Change");
+}
 @end
