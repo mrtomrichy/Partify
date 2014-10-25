@@ -7,18 +7,24 @@
 //
 
 #import "SpeakerViewController.h"
+#import "AppDelegate.h"
+#import "ServerManager.h"
 
 @interface SpeakerViewController () <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *goButton;
 @property (weak, nonatomic) IBOutlet UITextField *eventNameField;
 @property (weak, nonatomic) IBOutlet UIView *progressView;
-
+@property (weak, nonatomic) AppDelegate *appD;
+@property (weak, nonatomic) ServerManager *serverManager;
 @end
 
 @implementation SpeakerViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.appD = [UIApplication sharedApplication].delegate;
+    self.serverManager = self.appD.serverManager;
     
     [self.eventNameField addTarget:self
                             action:@selector(textFieldDidChange:)
@@ -34,9 +40,14 @@
 {
     [self showProgress];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [self hideProgress];
-    });
+    NSString *partyName = self.eventNameField.text;
+    [self.serverManager createPartyWithName:partyName andSuccessBlock:^(NSString *partyName, NSString *partyID) {
+        
+    } andFailureBlock:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[[UIAlertView alloc] initWithTitle:@"Error" message:[error description] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        });
+    }];
 }
 
 - (void) showProgress
