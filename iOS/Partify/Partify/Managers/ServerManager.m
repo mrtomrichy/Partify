@@ -10,27 +10,19 @@
 #import <AFNetworking/AFNetworking.h>
 
 
-const NSString *SERVER_ROOT = @"http://partify.harborapp.com";
-const NSString *ENDPONT_CREATE = @"create";
+const NSString *SERVER_ROOT = @"http://partify.apphb.com/api/";
+const NSString *ENDPONT_CREATE = @"Party/Create";
 
 @implementation ServerManager
 - (void) createPartyWithName: (NSString *) partyName andSuccessBlock: (createPartySuccessBlock) successBlock andFailureBlock:(createPartyFailureBlock) failureBlock
 {
-   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-       successBlock(partyName,@"123456");
-   });
-    
-    return;
-    
+    // TODO Url encode the party name
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    NSDictionary *parameters = @{@"partyname": partyName};
-    [manager POST:[NSString stringWithFormat:@"%@/%@", SERVER_ROOT, ENDPONT_CREATE] parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [manager POST:[NSString stringWithFormat:@"%@/%@?partyName=%@", SERVER_ROOT, ENDPONT_CREATE, partyName] parameters:NULL success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSString *eventToken = responseObject[@"token"];
         successBlock(partyName, eventToken);
-
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         failureBlock(error);
     }];
 }
-
 @end

@@ -8,6 +8,7 @@
 
 #import "SpotifyManager.h"
 #import <Spotify/Spotify.h>
+#import "AppDelegate.h"
 
 // Constants
 static NSString * const kClientId = @"ae0aa20d4b694ca38dacb56c2c2298c4";
@@ -17,11 +18,19 @@ static NSString * const kSessionUserDefaultsKey = @"spotifysessionkey";
 @interface SpotifyManager ()
 @property (nonatomic, strong) SPTSession *session;
 @property (nonatomic, strong) SPTAudioStreamingController *player;
-
+@property (nonatomic, weak) AppDelegate *appD;
 @end
 
 @implementation SpotifyManager
 
+- (instancetype) init
+{
+    if ((self = [super init]))
+    {
+        _appD = [UIApplication sharedApplication].delegate;
+    }
+    return self;
+}
 - (void) doAuth
 {
     SPTAuth *auth = [SPTAuth defaultInstance];
@@ -40,7 +49,6 @@ static NSString * const kSessionUserDefaultsKey = @"spotifysessionkey";
     // Ask SPTAuth if the URL given is a Spotify authentication callback
     if ([[SPTAuth defaultInstance] canHandleURL:url withDeclaredRedirectURL:[NSURL URLWithString:kCallbackURL]]) {
         
-        // Call the token swap service to get a logged in session
         
         [[SPTAuth defaultInstance]
          handleAuthCallbackWithTriggeredAuthURL:url
@@ -56,6 +64,9 @@ static NSString * const kSessionUserDefaultsKey = @"spotifysessionkey";
                                                        forKey:kSessionUserDefaultsKey];
              
              self.currentSession = session;
+             
+             [self.appD switchToSpeakerPlayback];
+
          }];
         return YES;
     }
