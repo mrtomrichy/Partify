@@ -17,6 +17,7 @@ static NSString * const kSessionUserDefaultsKey = @"spotifysessionkey";
 @interface SpotifyManager ()
 @property (nonatomic, strong) SPTSession *session;
 @property (nonatomic, strong) SPTAudioStreamingController *player;
+
 @end
 
 @implementation SpotifyManager
@@ -53,6 +54,8 @@ static NSString * const kSessionUserDefaultsKey = @"spotifysessionkey";
              NSData *sessionData = [NSKeyedArchiver archivedDataWithRootObject:session];
              [[NSUserDefaults standardUserDefaults] setObject:sessionData
                                                        forKey:kSessionUserDefaultsKey];
+             
+             self.currentSession = session;
          }];
         return YES;
     }
