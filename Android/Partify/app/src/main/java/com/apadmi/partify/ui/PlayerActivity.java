@@ -1,5 +1,6 @@
 package com.apadmi.partify.ui;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.apadmi.partify.R;
 import com.apadmi.partify.spotify.SpotifyManager;
@@ -32,6 +34,8 @@ public class PlayerActivity extends Activity implements PlayerNotificationCallba
 
   private PlayState state;
 
+  private String partyCode;
+
   private ImageView playButton;
   private Player mPlayer;
   private SeekBar mSeekBar;
@@ -49,6 +53,18 @@ public class PlayerActivity extends Activity implements PlayerNotificationCallba
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_player);
 
+    ActionBar ab = getActionBar();
+    ab.setSubtitle("Party host");
+
+    Bundle b = getIntent().getExtras();
+
+    if(b != null) {
+      partyCode = b.containsKey("partyCode") ? b.getString("partyCode") : "";
+    }
+
+    TextView partyCodeText = (TextView) findViewById(R.id.text_party_code);
+    partyCodeText.setText("Party Code: " + partyCode);
+
     mPlayer = SpotifyManager.getSpotifyManager().getPlayer();
 
     state = PlayState.STOPPED;
@@ -59,7 +75,7 @@ public class PlayerActivity extends Activity implements PlayerNotificationCallba
       @Override
       public void onClick(View view) {
         if (state == PlayState.STOPPED) {
-          mPlayer.play("spotify:track:6KywfgRqvgvfJc3JRwaZdZ");
+          mPlayer.play("spotify:track:2ahnofp2LbBWDXcJbMaSTu");
         } else if (state == PlayState.PLAYING) {
           mPlayer.pause();
           state = PlayState.PAUSED;
@@ -116,7 +132,8 @@ public class PlayerActivity extends Activity implements PlayerNotificationCallba
   }
 
   private void stopUpdatingSeekBar() {
-    scheduler.shutdown();
+    if(scheduler != null)
+      scheduler.shutdown();
     scheduler = null;
   }
 
@@ -184,5 +201,10 @@ public class PlayerActivity extends Activity implements PlayerNotificationCallba
   private void exitToStartScreen() {
     startActivity(new Intent(this, StartActivity.class));
     finish();
+  }
+
+  @Override
+  public void onBackPressed() {
+    exitToStartScreen();
   }
 }

@@ -6,15 +6,18 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@color/spotify_sand">
+        android:background="@color/spotify_sand"
+        >
 
         <SeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/seek_song"/>
+            android:id="@+id/seek_song"
+            android:indeterminate="false"
+            android:max="100"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -22,7 +25,36 @@
             android:id="@+id/button_play"
             android:layout_alignParentTop="false"
             android:layout_below="@+id/seek_song"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:src="@android:drawable/ic_media_play"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_next"
+            android:layout_toEndOf="@+id/button_play"
+            android:layout_marginLeft="28dp"
+            android:src="@android:drawable/ic_media_next"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:layout_below="@+id/seek_song"/>
 
     </RelativeLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/text_party_code"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:background="@color/spotify_green"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"/>
 </RelativeLayout>
