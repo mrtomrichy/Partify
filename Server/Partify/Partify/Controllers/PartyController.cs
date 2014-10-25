@@ -17,18 +17,33 @@ namespace Partify.Controllers
         [System.Web.Http.HttpGet]
         public IHttpActionResult Create(string partyName)
         {
-            var code = GeneratePartyKey();
-            var newAttendee = new Attendee {PartyCode = code};
-            var newParty = new Party {PartyCode = code, Name = partyName};
-            using (var db = new PartyContext())
+            try
             {
-                db.Attendees.Add(newAttendee);
-                db.Parties.Add(newParty);
-                db.SaveChanges();
-            }
-            var response = new CreateEventResponse {PartyCode = code, AttendeeId = newAttendee.AttendeeId};
+                var code = GeneratePartyKey();
+                var newAttendee = new Attendee {PartyCode = code};
+                var newParty = new Party {PartyCode = code, Name = partyName};
 
-            return Ok(response);
+                using (var db = new PartyContext())
+                {
+                    db.Attendees.Add(newAttendee);
+                    db.Parties.Add(newParty);
+                    db.SaveChanges();
+                }
+                var response = new CreateEventResponse {PartyCode = code, AttendeeId = newAttendee.AttendeeId};
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [Route("Test")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult Test(string test)
+        {
+            return Ok("OH YEAH");
         }
 
         [Route("Join")]

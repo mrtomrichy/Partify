@@ -20,7 +20,7 @@ namespace Partify
 
     public class Party
     {
-        public string PartyId { get; set; }
+        public long Id { get; set; }
         public string PartyCode { get; set; }
         public string Name { get; set; }
     }
@@ -31,8 +31,9 @@ namespace Partify
         {
             AttendeeId = GenerateId();
         }
-        public string AttendeeId { get; set; }
+        public long Id { get; set; }
         public string PartyCode { get; set; }
+        public string AttendeeId { get; set; }
 
         public string GenerateId()
         {
