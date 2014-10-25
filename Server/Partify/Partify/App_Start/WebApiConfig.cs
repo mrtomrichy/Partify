@@ -17,7 +17,6 @@ namespace Partify
             );
 
             config.EnableCors();
-
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
         }
     }
