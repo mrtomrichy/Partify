@@ -49,6 +49,7 @@
         
         [self.appD.spotifyManager doAuth];
     } andFailureBlock:^(NSError *error) {
+        [self hideProgress];
         dispatch_async(dispatch_get_main_queue(), ^{
             [[[UIAlertView alloc] initWithTitle:@"Error" message:[error description] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         });

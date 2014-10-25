@@ -10,6 +10,7 @@
 #import <Spotify/Spotify.h>
 #import "SpotifyManager.h"
 #import "AppDelegate.h"
+#import "PartyManager.h"
 
 
 @interface SpeakerPlaybackViewController () <SPTAudioStreamingPlaybackDelegate>
@@ -22,6 +23,7 @@
 @property (nonatomic, strong) SPTAudioStreamingController *player;
 @property (nonatomic, strong) NSTimer *seekTimer;
 @property (nonatomic) BOOL seekInProgress;
+@property (nonatomic, weak) PartyManager *partyManager;
 @end
 
 @implementation SpeakerPlaybackViewController
@@ -32,6 +34,8 @@
     [super viewDidLoad];
     self.appD = [UIApplication sharedApplication].delegate;
     self.spotifyManager = self.appD.spotifyManager;
+    self.partyManager = self.appD.partyManager;
+    self.partyCodeLabel.text = [NSString stringWithFormat:@"%@-%@", self.partyManager.partyID, self.partyManager.partyName];
     [self playTrack];
 }
 - (IBAction)playPressed:(id)sender {
@@ -40,18 +44,23 @@
 
 - (IBAction)seekStarted:(id)sender {
     self.seekInProgress = YES;
+    [self.player setIsPlaying:NO callback:NULL];
+
 }
 
 - (IBAction)seekEnded:(id)sender {
     self.seekInProgress = NO;
-}
-
-- (IBAction)seekBarDidSeek:(id)sender {
     UISlider *seekBar = sender;
     NSTimeInterval trackLength = [self.player.currentTrackMetadata[SPTAudioStreamingMetadataTrackDuration] doubleValue];
     
     NSTimeInterval newTimeValue = trackLength * seekBar.value;
     [self.player seekToOffset:newTimeValue callback:NULL];
+    [self.player setIsPlaying:YES callback:NULL];
+
+}
+
+- (IBAction)seekBarDidSeek:(id)sender {
+    
 }
 
 - (void) seekTimerFired: (NSTimer *) timer
@@ -116,6 +125,7 @@
 }
 
 - (void) audioStreaming:(SPTAudioStreamingController *)audioStreaming didChangeToTrack:(NSDictionary *)trackMetadata {
+    // TODO Next track
     NSLog(@"Change");
 }
 @end
