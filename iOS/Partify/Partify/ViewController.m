@@ -7,16 +7,23 @@
 //
 
 #import "ViewController.h"
+#import "SpotifyManager.h"
 
 @interface ViewController ()
-
+@property (nonatomic, strong) SpotifyManager *spotifyManager;
 @end
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    self.spotifyManager = [SpotifyManager new];
+}
+- (IBAction)loginPressed:(id)sender {
+    [self.spotifyManager doAuth];
+}
+
+- (IBAction)playPressed:(id)sender {
 }
 
 - (void)didReceiveMemoryWarning {
