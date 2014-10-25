@@ -14,6 +14,8 @@
 		361D3D4819FBEA3C000711C0 /* VoterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 361D3D4719FBEA3C000711C0 /* VoterViewController.m */; };
 		361D3D4B19FBEE0C000711C0 /* SpeakerPlaybackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 361D3D4A19FBEE0C000711C0 /* SpeakerPlaybackViewController.m */; };
 		361D3D4E19FBEE18000711C0 /* VoterPlaybackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 361D3D4D19FBEE18000711C0 /* VoterPlaybackViewController.m */; };
+		361D3D5119FC0444000711C0 /* SpeakerPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 361D3D5019FC0444000711C0 /* SpeakerPlaylistViewController.m */; };
+		361D3D5419FC13D5000711C0 /* ServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 361D3D5319FC13D5000711C0 /* ServerManager.m */; };
 		36EECCE819FBA8B200A15F93 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 36EECCE719FBA8B200A15F93 /* main.m */; };
 		36EECCEB19FBA8B200A15F93 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 36EECCEA19FBA8B200A15F93 /* AppDelegate.m */; };
 		36EECCEE19FBA8B200A15F93 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36EECCED19FBA8B200A15F93 /* ViewController.m */; };
@@ -47,6 +49,10 @@
 		361D3D4A19FBEE0C000711C0 /* SpeakerPlaybackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpeakerPlaybackViewController.m; sourceTree = "<group>"; };
 		361D3D4C19FBEE18000711C0 /* VoterPlaybackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoterPlaybackViewController.h; sourceTree = "<group>"; };
 		361D3D4D19FBEE18000711C0 /* VoterPlaybackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VoterPlaybackViewController.m; sourceTree = "<group>"; };
+		361D3D4F19FC0444000711C0 /* SpeakerPlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpeakerPlaylistViewController.h; sourceTree = "<group>"; };
+		361D3D5019FC0444000711C0 /* SpeakerPlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpeakerPlaylistViewController.m; sourceTree = "<group>"; };
+		361D3D5219FC13D5000711C0 /* ServerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerManager.h; sourceTree = "<group>"; };
+		361D3D5319FC13D5000711C0 /* ServerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerManager.m; sourceTree = "<group>"; };
 		36EECCE219FBA8B200A15F93 /* Partify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Partify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36EECCE619FBA8B200A15F93 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		36EECCE719FBA8B200A15F93 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -100,6 +106,8 @@
 			children = (
 				361D3D3A19FBCF08000711C0 /* SpotifyManager.h */,
 				361D3D3B19FBCF08000711C0 /* SpotifyManager.m */,
+				361D3D5219FC13D5000711C0 /* ServerManager.h */,
+				361D3D5319FC13D5000711C0 /* ServerManager.m */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -115,6 +123,8 @@
 				361D3D4A19FBEE0C000711C0 /* SpeakerPlaybackViewController.m */,
 				361D3D4C19FBEE18000711C0 /* VoterPlaybackViewController.h */,
 				361D3D4D19FBEE18000711C0 /* VoterPlaybackViewController.m */,
+				361D3D4F19FC0444000711C0 /* SpeakerPlaylistViewController.h */,
+				361D3D5019FC0444000711C0 /* SpeakerPlaylistViewController.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -327,9 +337,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				361D3D5419FC13D5000711C0 /* ServerManager.m in Sources */,
 				361D3D3C19FBCF08000711C0 /* SpotifyManager.m in Sources */,
 				361D3D4B19FBEE0C000711C0 /* SpeakerPlaybackViewController.m in Sources */,
 				361D3D4519FBE9F5000711C0 /* SpeakerViewController.m in Sources */,
+				361D3D5119FC0444000711C0 /* SpeakerPlaylistViewController.m in Sources */,
 				36EECCEE19FBA8B200A15F93 /* ViewController.m in Sources */,
 				36EECCEB19FBA8B200A15F93 /* AppDelegate.m in Sources */,
 				36EECCE819FBA8B200A15F93 /* main.m in Sources */,
