@@ -9,6 +9,8 @@
 #import "SpeakerViewController.h"
 #import "AppDelegate.h"
 #import "ServerManager.h"
+#import "PartyManager.h"
+#import "SpotifyManager.h"
 
 @interface SpeakerViewController () <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *goButton;
@@ -42,7 +44,10 @@
     
     NSString *partyName = self.eventNameField.text;
     [self.serverManager createPartyWithName:partyName andSuccessBlock:^(NSString *partyName, NSString *partyID) {
+        self.appD.partyManager.partyName = partyName;
+        self.appD.partyManager.partyID = partyID;
         
+        [self.appD.spotifyManager doAuth];
     } andFailureBlock:^(NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [[[UIAlertView alloc] initWithTitle:@"Error" message:[error description] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];

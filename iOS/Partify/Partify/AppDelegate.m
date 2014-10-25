@@ -9,10 +9,13 @@
 #import "AppDelegate.h"
 #import "SpotifyManager.h"
 #import "ServerManager.h"
+#import "PartyManager.h"
 
 @interface AppDelegate ()
 @property (strong, nonatomic) SpotifyManager *spotifyManager;
 @property (strong, nonatomic) ServerManager *serverManager;
+@property (strong, nonatomic) PartyManager *partyManager;
+
 @end
 
 @implementation AppDelegate
@@ -21,6 +24,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.spotifyManager = [SpotifyManager new];
     self.serverManager = [ServerManager new];
+    self.partyManager = [PartyManager new];
     return YES;
 }
 
@@ -35,4 +39,34 @@
     return [self.spotifyManager handleURL:url];
 }
 
+- (void) switchToSpeakerPlayback
+{
+    if ([NSThread isMainThread])
+    {
+        UIStoryboard *storyBoard = self.window.rootViewController.storyboard;
+        UIViewController *vc = [storyBoard instantiateViewControllerWithIdentifier:@"speakerPlayback"];
+        self.window.rootViewController = vc;
+    }
+    else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self switchToSpeakerPlayback];
+        });
+    }
+    
+}
+- (void) switchToVoterPlayback
+{
+    if ([NSThread isMainThread])
+    {
+        UIStoryboard *storyBoard = self.window.rootViewController.storyboard;
+        UIViewController *vc = [storyBoard instantiateViewControllerWithIdentifier:@"voterPlayback"];
+        self.window.rootViewController = vc;
+    }
+    else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self switchToVoterPlayback];
+        });
+    }
+
+}
 @end

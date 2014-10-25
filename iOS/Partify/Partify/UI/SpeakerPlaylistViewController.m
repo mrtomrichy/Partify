@@ -24,6 +24,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)closePressed:(id)sender {
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
+}
+
 /*
 #pragma mark - Navigation
 
