@@ -40,6 +40,31 @@ namespace Partify.Controllers
             }
         }
 
+        [Route("GetPlaylist")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult GetPlaylist(string partyCodePlaylist)
+        {
+            var playlist = new List<string>();
+            string[] playlists = {};
+            using (var db = new PartyContext())
+            {
+                var partyid = Convert.ToInt64(partyCodePlaylist);
+                var songs = db.Songs.Where(x => x.PartyId == partyid);
+                if (!songs.Any()) return Ok(playlists);
+
+                if (songs.Any())
+                {
+                    foreach (var song in songs)
+                    {
+                        playlist.Add(song.SpotifyId);
+                    }
+                }
+                playlists = playlist.ToArray();
+            }
+            var response = new GetPlaylistResponse {SpotifyIds = playlists};
+            return Ok(response);
+        }
+
         [Route("Add")]
         [System.Web.Http.HttpPost]
         public IHttpActionResult Add(string songId, string partyId)
@@ -74,7 +99,7 @@ namespace Partify.Controllers
         [System.Web.Http.HttpGet]
         public IHttpActionResult Test(string test)
         {
-            return Ok("8=============================================================================================================================================================================================================================================================================================================================================================================================================================DB=====================================================================================================================================================8");
+            return Ok("8===========DB==================8");
         }
 
         [Route("Join")]
