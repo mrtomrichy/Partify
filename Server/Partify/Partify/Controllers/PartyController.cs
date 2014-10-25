@@ -42,7 +42,7 @@ namespace Partify.Controllers
 
 
         [Route("Test")]
-        [System.Web.Http.HttpPost]
+        [System.Web.Http.HttpGet]
         public IHttpActionResult Test(string test)
         {
             return Ok("8==D");
