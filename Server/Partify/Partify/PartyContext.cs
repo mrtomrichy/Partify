@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Infrastructure;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Partify
 {
@@ -16,6 +17,7 @@ namespace Partify
 
         public DbSet<Party> Parties { get; set; }
         public DbSet<Attendee> Attendees { get; set; }
+        public DbSet<Songs> Songs { get; set; }
     }
 
     public class Party
@@ -39,5 +41,14 @@ namespace Partify
         {
             return Guid.NewGuid().ToString("N");
         }
+    }
+
+    public class Songs
+    {
+        public string SpotifyId { get; set; }
+        public long Id { get; set; }
+        public long PartyId { get; set; }
+        public int Order { get; set; }
+        public int Votes { get; set; }
     }
 }

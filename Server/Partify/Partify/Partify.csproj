@@ -141,6 +141,14 @@
     <Compile Include="Migrations\201410251755391_intitial.Designer.cs">
       <DependentUpon>201410251755391_intitial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201410251920221_Songs.cs" />
+    <Compile Include="Migrations\201410251920221_Songs.Designer.cs">
+      <DependentUpon>201410251920221_Songs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201410252003306_Songs1.cs" />
+    <Compile Include="Migrations\201410252003306_Songs1.Designer.cs">
+      <DependentUpon>201410252003306_Songs1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CreateEventResponse.cs" />
     <Compile Include="Models\JoinEventResponse.cs" />
@@ -244,6 +252,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201410251755391_intitial.resx">
       <DependentUpon>201410251755391_intitial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201410251920221_Songs.resx">
+      <DependentUpon>201410251920221_Songs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201410252003306_Songs1.resx">
+      <DependentUpon>201410252003306_Songs1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
