@@ -8,7 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+@class SPTSession;
+
 @interface SpotifyManager : NSObject
+@property (nonatomic, strong) SPTSession *currentSession;
 - (void) doAuth;
 - (BOOL) handleURL: (NSURL *)url;
 @end
