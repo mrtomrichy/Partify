@@ -10,6 +10,10 @@
 		361D3D3819FBCE96000711C0 /* Spotify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 361D3D3719FBCE96000711C0 /* Spotify.framework */; };
 		361D3D3C19FBCF08000711C0 /* SpotifyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 361D3D3B19FBCF08000711C0 /* SpotifyManager.m */; };
 		361D3D3E19FBCF43000711C0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 361D3D3D19FBCF43000711C0 /* AVFoundation.framework */; };
+		361D3D4519FBE9F5000711C0 /* SpeakerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 361D3D4419FBE9F5000711C0 /* SpeakerViewController.m */; };
+		361D3D4819FBEA3C000711C0 /* VoterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 361D3D4719FBEA3C000711C0 /* VoterViewController.m */; };
+		361D3D4B19FBEE0C000711C0 /* SpeakerPlaybackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 361D3D4A19FBEE0C000711C0 /* SpeakerPlaybackViewController.m */; };
+		361D3D4E19FBEE18000711C0 /* VoterPlaybackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 361D3D4D19FBEE18000711C0 /* VoterPlaybackViewController.m */; };
 		36EECCE819FBA8B200A15F93 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 36EECCE719FBA8B200A15F93 /* main.m */; };
 		36EECCEB19FBA8B200A15F93 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 36EECCEA19FBA8B200A15F93 /* AppDelegate.m */; };
 		36EECCEE19FBA8B200A15F93 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36EECCED19FBA8B200A15F93 /* ViewController.m */; };
@@ -35,6 +39,14 @@
 		361D3D3A19FBCF08000711C0 /* SpotifyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpotifyManager.h; sourceTree = "<group>"; };
 		361D3D3B19FBCF08000711C0 /* SpotifyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpotifyManager.m; sourceTree = "<group>"; };
 		361D3D3D19FBCF43000711C0 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		361D3D4319FBE9F5000711C0 /* SpeakerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpeakerViewController.h; sourceTree = "<group>"; };
+		361D3D4419FBE9F5000711C0 /* SpeakerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpeakerViewController.m; sourceTree = "<group>"; };
+		361D3D4619FBEA3C000711C0 /* VoterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoterViewController.h; sourceTree = "<group>"; };
+		361D3D4719FBEA3C000711C0 /* VoterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VoterViewController.m; sourceTree = "<group>"; };
+		361D3D4919FBEE0C000711C0 /* SpeakerPlaybackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpeakerPlaybackViewController.h; sourceTree = "<group>"; };
+		361D3D4A19FBEE0C000711C0 /* SpeakerPlaybackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpeakerPlaybackViewController.m; sourceTree = "<group>"; };
+		361D3D4C19FBEE18000711C0 /* VoterPlaybackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoterPlaybackViewController.h; sourceTree = "<group>"; };
+		361D3D4D19FBEE18000711C0 /* VoterPlaybackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VoterPlaybackViewController.m; sourceTree = "<group>"; };
 		36EECCE219FBA8B200A15F93 /* Partify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Partify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36EECCE619FBA8B200A15F93 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		36EECCE719FBA8B200A15F93 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -92,6 +104,21 @@
 			path = Managers;
 			sourceTree = "<group>";
 		};
+		361D3D4219FBE96D000711C0 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				361D3D4319FBE9F5000711C0 /* SpeakerViewController.h */,
+				361D3D4419FBE9F5000711C0 /* SpeakerViewController.m */,
+				361D3D4619FBEA3C000711C0 /* VoterViewController.h */,
+				361D3D4719FBEA3C000711C0 /* VoterViewController.m */,
+				361D3D4919FBEE0C000711C0 /* SpeakerPlaybackViewController.h */,
+				361D3D4A19FBEE0C000711C0 /* SpeakerPlaybackViewController.m */,
+				361D3D4C19FBEE18000711C0 /* VoterPlaybackViewController.h */,
+				361D3D4D19FBEE18000711C0 /* VoterPlaybackViewController.m */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		36EECCD919FBA8B200A15F93 = {
 			isa = PBXGroup;
 			children = (
@@ -116,6 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				361D3D3919FBCEEF000711C0 /* Managers */,
+				361D3D4219FBE96D000711C0 /* UI */,
 				36EECCE919FBA8B200A15F93 /* AppDelegate.h */,
 				36EECCEA19FBA8B200A15F93 /* AppDelegate.m */,
 				36EECCEC19FBA8B200A15F93 /* ViewController.h */,
@@ -300,9 +328,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				361D3D3C19FBCF08000711C0 /* SpotifyManager.m in Sources */,
+				361D3D4B19FBEE0C000711C0 /* SpeakerPlaybackViewController.m in Sources */,
+				361D3D4519FBE9F5000711C0 /* SpeakerViewController.m in Sources */,
 				36EECCEE19FBA8B200A15F93 /* ViewController.m in Sources */,
 				36EECCEB19FBA8B200A15F93 /* AppDelegate.m in Sources */,
 				36EECCE819FBA8B200A15F93 /* main.m in Sources */,
+				361D3D4E19FBEE18000711C0 /* VoterPlaybackViewController.m in Sources */,
+				361D3D4819FBEA3C000711C0 /* VoterViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
