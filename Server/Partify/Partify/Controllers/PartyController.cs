@@ -14,7 +14,7 @@ namespace Partify.Controllers
         //
         // GET: /Party/
         [Route("Create")]
-        [System.Web.Http.HttpGet]
+        [System.Web.Http.HttpPost]
         public IHttpActionResult Create(string partyName)
         {
             try
@@ -36,18 +36,20 @@ namespace Partify.Controllers
             {
                 return BadRequest(ex.Message);
             }
-
         }
 
+        [Route("Add")]
+
+
         [Route("Test")]
-        [System.Web.Http.HttpGet]
+        [System.Web.Http.HttpPost]
         public IHttpActionResult Test(string test)
         {
-            return Ok("OH YEAH");
+            return Ok("8==D");
         }
 
         [Route("Join")]
-        [System.Web.Http.HttpGet]
+        [System.Web.Http.HttpPost]
         public IHttpActionResult Join(string partyCode)
         {
             var newAttendee = new Attendee {PartyCode = partyCode};
