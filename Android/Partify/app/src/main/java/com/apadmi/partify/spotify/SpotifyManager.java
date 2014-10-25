@@ -1,57 +1,34 @@
 package com.apadmi.partify.spotify;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
+
+import com.spotify.sdk.android.Spotify;
+import com.spotify.sdk.android.playback.ConnectionStateCallback;
+import com.spotify.sdk.android.playback.Connectivity;
+import com.spotify.sdk.android.playback.Player;
 import com.spotify.sdk.android.playback.PlayerNotificationCallback;
 import com.spotify.sdk.android.playback.PlayerState;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by tom on 25/10/14.
  */
-public class SpotifyManager implements PlayerNotificationCallback {
-  //   ____                _              _
-  //  / ___|___  _ __  ___| |_ __ _ _ __ | |_ ___
-  // | |   / _ \| '_ \/ __| __/ _` | '_ \| __/ __|
-  // | |__| (_) | | | \__ \ || (_| | | | | |_\__ \
-  //  \____\___/|_| |_|___/\__\__,_|_| |_|\__|___/
-  //
+public class SpotifyManager implements PlayerNotificationCallback, ConnectionStateCallback {
 
-  private static final String CLIENT_ID = "cedaa376d2684e77bbeff705278613f2";
-  private static final String REDIRECT_URI = "testschema://callback";
+  private static SpotifyManager sSharedInstance = null;
 
-  private static final String TEST_SONG_URI = "spotify:track:6KywfgRqvgvfJc3JRwaZdZ";
-  private static final String TEST_SONG_MONO_URI = "spotify:track:1FqY3uJypma5wkYw66QOUi";
-  private static final String TEST_SONG_48kHz_URI = "spotify:track:3wxTNS3aqb9RbBLZgJdZgH";
-  private static final String TEST_PLAYLIST_URI = "spotify:user:sqook:playlist:0BZvnsfuqmnLyj6WVRuSte";
-  private static final String TEST_QUEUE_SONG_URI = "spotify:track:5EEOjaJyWvfMglmEwf9bG3";
+  public static final String CLIENT_ID = "ae0aa20d4b694ca38dacb56c2c2298c4";
+  public static final String REDIRECT_URI = "partify://";
 
-  // Currently the way to play the album is to resolve the list of tracks using
-  // WebAPI (as shown here https://developer.spotify.com/web-api/get-albums-tracks/)
-  // and pass it to Player#playTrackList(java.util.List)
-  // The list of tracks below is from the album: spotify:album:4JWoGR0Kwa0DlqbikKNqOc
-  private static final List<String> TEST_ALBUM_TRACKS = Arrays.asList(
-      "spotify:track:2To3PTOTGJUtRsK3nQemP4",
-      "spotify:track:0tDoBMgyAzGgLhs73KPrJL",
-      "spotify:track:5YkSQuB8i7J4TTyj0xw6ol",
-      "spotify:track:3WpLfCkrlQxj8SISLzhs06",
-      "spotify:track:2lGNTC3NKCG1d4lR8x3611",
-      "spotify:track:0kdSj5REwpHjTBaBsm1wv8",
-      "spotify:track:3BgnZiGnnRlXfeGR8ryKzT",
-      "spotify:track:00cVWQIFyQnIdsgoVy7qAG",
-      "spotify:track:6eEEoowHpnaD3q83ZhYmhZ",
-      "spotify:track:1HFBn8S30ndZ7lLb9HbENU",
-      "spotify:track:1I9VibKgJTqGfrh8fEK3sL",
-      "spotify:track:6rXSPMgGIyOYiMhsj3eSAi",
-      "spotify:track:2xwuXthwdNGbPyEqifPQNW",
-      "spotify:track:5vRuWI48vKn4TV7efrYtJL",
-      "spotify:track:4SEDYSBDd4Ota125LjHa2w",
-      "spotify:track:2bVTnSTjLWAizyj4XcU5bf",
-      "spotify:track:4gQzqlFuqv6l4Ka633Ue7T",
-      "spotify:track:0SLVmM7IrrtkPNa1Fi3IKT"
-  );
+  private Player mPlayer;
 
-  private static SpotifyManager sSharedInstance;
+  private PlayerNotificationCallback playBackEventListener = null;
+
+  private SpotifyManager() {
+
+  }
 
   public static SpotifyManager getSpotifyManager() {
     if(sSharedInstance == null)
@@ -60,9 +37,89 @@ public class SpotifyManager implements PlayerNotificationCallback {
     return sSharedInstance;
   }
 
-  @Override
-  public void onPlaybackEvent(PlayerNotificationCallback.EventType eventType, PlayerState playerState) {
 
+  public static Connectivity getNetworkConnectivity(Context context) {
+    ConnectivityManager connectivityManager;
+    connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+    if (activeNetwork != null) {
+      return Connectivity.fromNetworkType(activeNetwork.getType());
+    } else {
+      return Connectivity.OFFLINE;
+    }
   }
 
+  public void setSpotify(Spotify spotify, final Context appContext) {
+    this.mPlayer = spotify.getPlayer(appContext, "Partify",
+        sSharedInstance, new Player.InitializationObserver() {
+          @Override
+          public void onInitialized() {
+            Log.d("Spotify Manager", "-- Player initialized --");
+            mPlayer.setConnectivityStatus(SpotifyManager.getNetworkConnectivity(appContext));
+            mPlayer.addPlayerNotificationCallback(SpotifyManager.getSpotifyManager());
+            mPlayer.addConnectionStateCallback(SpotifyManager.getSpotifyManager());
+          }
+
+          @Override
+          public void onError(Throwable error) {
+            Log.d("Spotify Manager", "Error in initialization: " + error.getMessage());
+          }
+        });
+  }
+
+  public void setListener(PlayerNotificationCallback listener)
+  {
+    playBackEventListener = listener;
+  }
+
+  public void removeListener()
+  {
+    playBackEventListener = null;
+  }
+
+  public Player getPlayer() {
+    return this.mPlayer;
+  }
+
+  public void destroyPlayer() {
+    Spotify.destroyPlayer(sSharedInstance);
+  }
+
+
+  @Override
+  public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
+    if(playBackEventListener != null) {
+      playBackEventListener.onPlaybackEvent(eventType, playerState);
+    }
+  }
+
+  @Override
+  public void onNewCredentials(String s) {
+    Log.d("SpotifyManager", s);
+  }
+
+  @Override
+  public void onLoginFailed(Throwable throwable) {
+    Log.d("SpotifyManager", "Login fail: " + throwable.getMessage());
+  }
+
+  @Override
+  public void onLoggedOut() {
+    Log.d("SpotifyManager", "Logged out");
+  }
+
+  @Override
+  public void onLoggedIn() {
+    Log.d("SpotifyManager", "Logged in");
+  }
+
+  @Override
+  public void onConnectionMessage(String s) {
+    Log.d("SpotifyManager", s);
+  }
+
+  @Override
+  public void onTemporaryError() {
+    Log.d("SpotifyManager", "Some shitty error");
+  }
 }
