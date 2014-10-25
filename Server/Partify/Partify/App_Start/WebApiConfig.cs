@@ -16,6 +16,8 @@ namespace Partify
                 defaults: new { id = RouteParameter.Optional }
             );
 
+            config.EnableCors();
+
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
         }
     }
