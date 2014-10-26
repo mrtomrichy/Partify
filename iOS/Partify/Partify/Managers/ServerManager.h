@@ -16,6 +16,7 @@ typedef void (^votePlaylistSuccessBlock)(NSArray * newPlaylist);
 typedef void (^joinSuccessBlock)(NSString * userToken);
 typedef void (^searchSuccessBlock)(NSArray * results);
 typedef void (^addSongSuccessBlock)();
+typedef void (^songDetailsSuccessBlock)(NSDictionary *songDetail);
 
 @interface ServerManager : NSObject
 - (void) createPartyWithName: (NSString *) partyName andSuccessBlock: (createPartySuccessBlock) successBlock andFailureBlock:(requestFailureBlock) failureBlock;
@@ -29,4 +30,6 @@ typedef void (^addSongSuccessBlock)();
 - (void) searchForString: (NSString *)searchString withSuccessBlock:(searchSuccessBlock)successBlock andFailureBlock:(requestFailureBlock)failureBlock;
 
 - (void) addSong: (NSString *) songID andPartyID: (NSString *) partyID andSuccessBlock: (addSongSuccessBlock) successBlock andFailure: (requestFailureBlock) failureBlock;
+
+- (void) lookupSongID: (NSString *) songID withSuccessBlock: (songDetailsSuccessBlock) successBlock andFailureBlock: (requestFailureBlock) failureBlock;
 @end

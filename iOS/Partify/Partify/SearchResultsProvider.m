@@ -7,12 +7,36 @@
 //
 
 #import "SearchResultsProvider.h"
+#import "AppDelegate.h"
+#import "ServerManager.h"
+
+@interface SearchResultsProvider ()
+@property (nonatomic, weak) AppDelegate *appD;
+@property (nonatomic, weak) ServerManager *serverManager;
+@end
 
 @implementation SearchResultsProvider
+
+- (instancetype) init
+{
+    if ((self = [super init]))
+    {
+        _appD = [UIApplication sharedApplication].delegate;
+        _serverManager = _appD.serverManager;
+    }
+    return self;
+}
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"rrererere"];
-    cell.textLabel.text = self.results[indexPath.row][@"name"];
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"rrererere"];
+    cell.backgroundColor = [UIColor colorWithRed:82.0f / 255.0f green:82.0f / 255.0f blue:82.0f / 255.0f alpha:1.0f];
+    
+    [self.serverManager lookupSongID:self.results[indexPath.row][@"id"] withSuccessBlock:^(NSDictionary *songDetail) {
+        cell.textLabel.text = songDetail[@"name"];
+        cell.detailTextLabel.text = songDetail[@"artists"][0][@"name"];
+    } andFailureBlock:NULL];
+    
+    
     return cell;
 }
 

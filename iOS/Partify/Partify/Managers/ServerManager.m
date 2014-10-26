@@ -16,6 +16,7 @@ const NSString *ENDPOINT_PLAYLIST = @"Party/GetPlaylist";
 const NSString *ENDPOINT_VOTE = @"Party/Vote";
 const NSString *ENDPOINT_JOIN = @"Party/Join";
 const NSString *ENDPOINT_ADD = @"Party/Add";
+const NSString *ENDPOINT_DETAILS = @"https://api.spotify.com/v1/tracks/";
 NSString * const ENDPOINT_SEARCH = @"https://api.spotify.com/v1/search?q=%@&type=track";
 
 @implementation ServerManager
@@ -79,6 +80,16 @@ NSString * const ENDPOINT_SEARCH = @"https://api.spotify.com/v1/search?q=%@&type
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager POST:[NSString stringWithFormat:@"%@/%@?songId=%@&partyId=%@", SERVER_ROOT, ENDPOINT_ADD, songID, partyID] parameters:NULL success:^(AFHTTPRequestOperation *operation, id responseObject) {
         successBlock();
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        failureBlock(error);
+    }];
+}
+
+- (void) lookupSongID: (NSString *) songID withSuccessBlock: (songDetailsSuccessBlock) successBlock andFailureBlock: (requestFailureBlock) failureBlock
+{
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:[ENDPOINT_DETAILS stringByAppendingString:songID] parameters:NULL success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        successBlock(responseObject);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         failureBlock(error);
     }];
