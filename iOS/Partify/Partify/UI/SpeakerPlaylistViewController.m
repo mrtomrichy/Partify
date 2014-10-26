@@ -7,8 +7,18 @@
 //
 
 #import "SpeakerPlaylistViewController.h"
+#import "PlaylistProvider.h"
+#import "PlaylistProvider.h"
+#import "AppDelegate.h"
+#import "ServerManager.h"
+#import "PartyManager.h"
 
 @interface SpeakerPlaylistViewController ()
+@property (weak, nonatomic) IBOutlet UITableView *playlistTableView;
+@property (nonatomic, strong) PlaylistProvider *playlistProvider;
+@property (nonatomic, weak) AppDelegate *appD;
+@property (nonatomic, weak) ServerManager *serverManager;
+@property (nonatomic, weak) PartyManager *partyManager;
 
 @end
 
@@ -16,12 +26,24 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    self.appD = [UIApplication sharedApplication].delegate;
+    self.serverManager = self.appD.serverManager;
+    self.partyManager = self.appD.partyManager;
+    
+    self.playlistProvider = [PlaylistProvider new];
+    self.playlistTableView.delegate = self.playlistProvider;
+    self.playlistTableView.dataSource = self.playlistProvider;
+    
+    [self.serverManager updatePlaylistWithPartyID:self.partyManager.partyID andSuccessBlock:^(NSArray *newPlaylist) {
+        self.playlistProvider.playlist = newPlaylist;
+        [self.playlistTableView reloadData];
+    } andFailureBlock:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[[UIAlertView alloc] initWithTitle:@"Error" message:[error description] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        });
+    }];
+    
 }
 
 - (IBAction)closePressed:(id)sender {

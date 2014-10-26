@@ -9,6 +9,7 @@
 #import "VoterViewController.h"
 #import "AppDelegate.h"
 #import "ServerManager.h"
+#import "PartyManager.h"
 
 @interface VoterViewController () <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *codeField;
@@ -16,6 +17,7 @@
 @property (weak, nonatomic) AppDelegate *appD;
 @property (weak, nonatomic) ServerManager *serverManager;
 @property (weak, nonatomic) IBOutlet UIView *progressView;
+@property (weak, nonatomic) PartyManager *partyManager;
 
 @end
 
@@ -25,6 +27,7 @@
     [super viewDidLoad];
     self.appD = [UIApplication sharedApplication].delegate;
     self.serverManager = self.appD.serverManager;
+    self.partyManager = self.appD.partyManager;
     
     [self.codeField addTarget:self
                             action:@selector(textFieldDidChange:)
@@ -40,6 +43,7 @@
     [self showProgress];
     NSString *codeName = self.codeField.text;
     [self.serverManager joinParty:codeName withSuccessBlock:^(NSString *userToken) {
+        self.partyManager.partyID = codeName;
         [self.appD switchToVoterPlayback];
     } andFailureBlock:^(NSError *error) {
         [self hideProgress];
