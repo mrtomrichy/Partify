@@ -12,7 +12,7 @@
 #import "PartyManager.h"
 #import "SpotifyManager.h"
 
-@interface SpeakerViewController () <UITextFieldDelegate>
+@interface SpeakerViewController () <UITextFieldDelegate, UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *goButton;
 @property (weak, nonatomic) IBOutlet UITextField *eventNameField;
 @property (weak, nonatomic) IBOutlet UIView *progressView;
@@ -46,14 +46,22 @@
     [self.serverManager createPartyWithName:partyName andSuccessBlock:^(NSString *partyName, NSString *partyID) {
         self.appD.partyManager.partyName = partyName;
         self.appD.partyManager.partyID = partyID;
-        
-        [self.appD.spotifyManager doAuth];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[[UIAlertView alloc] initWithTitle:@"Spotify authorisation" message:@"We need to authorise Partify against your spotify account. Press ok to continue" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        });
+    
     } andFailureBlock:^(NSError *error) {
         [self hideProgress];
         dispatch_async(dispatch_get_main_queue(), ^{
             [[[UIAlertView alloc] initWithTitle:@"Error" message:[error description] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         });
     }];
+}
+
+- (void) alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    [self.appD.spotifyManager doAuth];
+
 }
 
 - (void) showProgress
