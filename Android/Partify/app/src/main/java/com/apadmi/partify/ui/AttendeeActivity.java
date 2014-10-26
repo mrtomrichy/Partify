@@ -1,6 +1,5 @@
 package com.apadmi.partify.ui;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,9 +21,6 @@ public class AttendeeActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_attendee);
-
-    ActionBar ab = getActionBar();
-    ab.setSubtitle("Party Mode");
 
     Bundle b = getIntent().getExtras();
 

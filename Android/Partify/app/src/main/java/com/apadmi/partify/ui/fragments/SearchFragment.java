@@ -1,5 +1,6 @@
 package com.apadmi.partify.ui.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -47,6 +48,12 @@ public class SearchFragment extends Fragment {
   public SearchFragment() {
     if (trackList == null)
       trackList = new ArrayList<Track>();
+  }
+
+  @Override
+  public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    activity.getActionBar().setSubtitle("Search for a song");
   }
 
   @Override
