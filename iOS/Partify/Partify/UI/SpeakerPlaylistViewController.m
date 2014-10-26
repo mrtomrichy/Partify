@@ -36,8 +36,9 @@
     self.playlistTableView.dataSource = self.playlistProvider;
     
     [self.serverManager updatePlaylistWithPartyID:self.partyManager.partyID andSuccessBlock:^(NSArray *newPlaylist) {
+        self.partyManager.playlist = newPlaylist;
         self.playlistProvider.playlist = newPlaylist;
-        [self.playlistTableView reloadData];
+        [self.playlistTableView     reloadData];
     } andFailureBlock:^(NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [[[UIAlertView alloc] initWithTitle:@"Error" message:[error description] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];

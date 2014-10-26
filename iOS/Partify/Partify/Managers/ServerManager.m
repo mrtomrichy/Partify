@@ -15,6 +15,7 @@ const NSString *ENDPOINT_CREATE = @"Party/Create";
 const NSString *ENDPOINT_PLAYLIST = @"Party/GetPlaylist";
 const NSString *ENDPOINT_VOTE = @"Party/Vote";
 const NSString *ENDPOINT_JOIN = @"Party/Join";
+NSString * const ENDPOINT_SEARCH = @"https://api.spotify.com/v1/search?q=%@&type=track";
 
 @implementation ServerManager
 - (void) createPartyWithName: (NSString *) partyName andSuccessBlock: (createPartySuccessBlock) successBlock andFailureBlock:(requestFailureBlock) failureBlock
@@ -52,7 +53,17 @@ const NSString *ENDPOINT_JOIN = @"Party/Join";
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager POST:[NSString stringWithFormat:@"%@/%@?partyCode=%@", SERVER_ROOT, ENDPOINT_JOIN, [partyID stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] parameters:NULL success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        successBlock(responseObject[@"AttendeeId"]);
+        successBlock(responseObject[@"tracks"][@"items"]);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        failureBlock(error);
+    }];
+}
+
+- (void) searchForString: (NSString *)searchString withSuccessBlock:(searchSuccessBlock)successBlock andFailureBlock:(requestFailureBlock)failureBlock
+{
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:[NSString stringWithFormat:ENDPOINT_SEARCH, [searchString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] parameters:NULL success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        successBlock(responseObject);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         failureBlock(error);
     }];

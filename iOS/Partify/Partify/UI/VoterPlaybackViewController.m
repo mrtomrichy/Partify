@@ -35,6 +35,7 @@
     
     [self.serverManager updatePlaylistWithPartyID:self.partyManager.partyID andSuccessBlock:^(NSArray *newPlaylist) {
         self.playlistProvider.playlist = newPlaylist;
+        self.partyManager.playlist = newPlaylist;
         [self.playlistTable reloadData];
     } andFailureBlock:^(NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
