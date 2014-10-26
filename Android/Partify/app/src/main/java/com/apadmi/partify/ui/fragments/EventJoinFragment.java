@@ -21,11 +21,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.apadmi.partify.R;
-import com.apadmi.partify.spotify.SpotifyManager;
-import com.apadmi.partify.ui.PlayerActivity;
-import com.spotify.sdk.android.Spotify;
-import com.spotify.sdk.android.authentication.AuthenticationResponse;
-import com.spotify.sdk.android.authentication.SpotifyAuthentication;
+import com.apadmi.partify.ui.AttendeeActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,55 +30,45 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 /**
- * Created by tom on 25/10/14.
+ * Created by tom on 26/10/14.
  */
-public class EventDetailsFragment extends Fragment {
+public class EventJoinFragment extends Fragment {
 
   private ProgressDialog progressDialog;
-  private String name;
+  private String partyCode;
 
   @Override
   public void onAttach(Activity activity) {
     super.onAttach(activity);
     activity.getActionBar().setDisplayHomeAsUpEnabled(true);
-    getActivity().getActionBar().setSubtitle("Create a party");
+    getActivity().getActionBar().setSubtitle("Join a party");
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View root = inflater.inflate(R.layout.fragment_event_details, container, false);
+    View root = inflater.inflate(R.layout.fragment_join, container, false);
 
-    final EditText nameInput = (EditText) root.findViewById(R.id.editText_event_name);
-    Button submitEventDetails = (Button) root.findViewById(R.id.button_start_event);
+    final EditText partyCodeText = (EditText) root.findViewById(R.id.editText_event_join_name);
 
-    submitEventDetails.setOnClickListener(new View.OnClickListener() {
+    Button joinButton = (Button) root.findViewById(R.id.button_join_event);
+    joinButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        name = nameInput.getText().toString();
-        if(name != null && name.length() > 0)
-          startParty();
-        else
-          Toast.makeText(getActivity(), "Please input a party name", Toast.LENGTH_SHORT).show();
+        partyCode = partyCodeText.getText().toString();
+        if(partyCode != null && partyCode.length() > 0)
+          joinParty(partyCode);
       }
     });
 
     return root;
   }
 
-  public void onAuthenticationComplete(AuthenticationResponse authResponse) {
-    Log.d("Spotify Manager", "Got authentication token");
-
-    SpotifyManager.getSpotifyManager().setSpotify(new Spotify(authResponse.getAccessToken()), getActivity().getApplicationContext());
-
-    requestID();
-  }
-
-  private void requestID() {
+  private void joinParty(String partyCode) {
     // Instantiate the RequestQueue.
     RequestQueue queue = Volley.newRequestQueue(getActivity());
-    String url = "http://partify.apphb.com/api/Party/Create?partyName=";
+    String url = "http://partify.apphb.com/api/Party/Join?partyCode=";
     try {
-      url += URLEncoder.encode(name, "UTF-8");
+      url += URLEncoder.encode(partyCode, "UTF-8");
     }catch(UnsupportedEncodingException e){}
 
     JsonRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, url, null,
@@ -93,7 +79,9 @@ public class EventDetailsFragment extends Fragment {
             try {
               JSONObject j = new JSONObject(response.toString());
 
-              goToPlayScreen(j.getString("PartyCode"));
+              Log.e("USER CODE", j.getString("AttendeeId"));
+              Log.e("PARTY NAME", j.getString("PartyName"));
+              goToPartyScreen(j.getString("AttendeeId"), j.getString("PartyName"));
             }catch(JSONException e){
               e.printStackTrace();
             }
@@ -102,11 +90,12 @@ public class EventDetailsFragment extends Fragment {
         new Response.ErrorListener() {
           @Override
           public void onErrorResponse(VolleyError error) {
+            Toast.makeText(getActivity(), "Party not found", Toast.LENGTH_SHORT).show();
             hideProgress();
           }
         });
 
-    showProgress("Requesting party code");
+    showProgress("Joining party");
 
     queue.add(jsObjRequest);
   }
@@ -129,20 +118,12 @@ public class EventDetailsFragment extends Fragment {
     progressDialog = null;
   }
 
-  private void startParty() {
-    showProgress("Logging the fuck in");
-    SpotifyAuthentication.openAuthWindow(SpotifyManager.CLIENT_ID, "token", SpotifyManager.REDIRECT_URI,
-        new String[]{"user-read-private", "streaming"},
-        null, getActivity());
-  }
-
-  private void goToPlayScreen(String partyCode) {
-    Log.e("PartyCode", partyCode);
-    Intent intent = new Intent(getActivity(), PlayerActivity.class);
+  private void goToPartyScreen(String userID, String partyName) {
+    Intent intent = new Intent(getActivity(), AttendeeActivity.class);
+    intent.putExtra("partyName", partyName);
+    intent.putExtra("attendeeId", userID);
     intent.putExtra("partyCode", partyCode);
-    startActivity(intent);
+    getActivity().startActivity(intent);
     getActivity().finish();
   }
-
-
 }

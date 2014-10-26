@@ -41,6 +41,7 @@ public class EventTypePickerFragment extends Fragment {
     });
 
     getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+    getActivity().getActionBar().setSubtitle("Spotify for parties");
 
     return root;
   }
@@ -66,6 +67,6 @@ public class EventTypePickerFragment extends Fragment {
   }
 
   private void joinParty() {
-
+    getFragmentManager().beginTransaction().replace(R.id.main_content, new EventJoinFragment()).addToBackStack(null).commit();
   }
 }
