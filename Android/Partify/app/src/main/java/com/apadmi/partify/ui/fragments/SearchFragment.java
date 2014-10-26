@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -20,6 +21,7 @@ import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.apadmi.partify.R;
 import com.apadmi.partify.adapters.SearchResultsAdapter;
+import com.apadmi.partify.spotify.SpotifyManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,6 +83,14 @@ public class SearchFragment extends Fragment {
 
     resultsList.setAdapter(mAdapter);
 
+    resultsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Track selected = trackList.get(i);
+        request(selected);
+      }
+    });
+
     return root;
   }
 
@@ -120,11 +130,10 @@ public class SearchFragment extends Fragment {
                 JSONArray artistList = items.getJSONObject(i).getJSONArray("artists");
                 for (int a = 0; a < artistList.length(); a++)
                   artists += artistList.getJSONObject(a).getString("name");
-                String uri = items.getJSONObject(i).getString("uri");
+                String uri = items.getJSONObject(i).getString("id");
 
                 JSONArray images = items.getJSONObject(i).getJSONObject("album").getJSONArray("images");
                 String imageURL = images.getJSONObject(images.length()-1).getString("url");
-                Log.e("BELLEND", imageURL);
                 trackList.add(new Track(name, artists, uri, imageURL));
               }
 
@@ -146,6 +155,35 @@ public class SearchFragment extends Fragment {
         });
 
     //showProgress("Joining party");
+
+    queue.add(jsObjRequest);
+  }
+
+  public void request(Track selected) {
+    RequestQueue queue = Volley.newRequestQueue(getActivity());
+
+    String url = "";
+    try {
+      url = String.format("http://partify.apphb.com/api/party/Add?songId=%s&partyId=%s",
+          URLEncoder.encode(selected.getUri(), "UTF-8"),
+          URLEncoder.encode(SpotifyManager.getSpotifyManager().getSession().getPartyCode(), "UTF-8"));
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
+
+    jsObjRequest = new JsonObjectRequest(Request.Method.POST, url, null,
+        new Response.Listener<JSONObject>() {
+          @Override
+          public void onResponse(JSONObject response) {
+             Log.e("GUNE", response.toString());
+          }
+        },
+        new Response.ErrorListener() {
+          @Override
+          public void onErrorResponse(VolleyError error) {
+
+          }
+        });
 
     queue.add(jsObjRequest);
   }

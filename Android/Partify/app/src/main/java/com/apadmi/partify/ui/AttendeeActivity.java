@@ -10,41 +10,13 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.apadmi.partify.R;
+import com.apadmi.partify.spotify.SpotifyManager;
 import com.apadmi.partify.ui.fragments.SearchFragment;
 
 /**
  * Created by tom on 26/10/14.
  */
 public class AttendeeActivity extends Activity {
-
-  String partyName;
-  String attendeeId;
-
-  class SessionDetails {
-    String partyCode;
-    String partyName;
-    String userId;
-
-    public SessionDetails(String partyCode, String partyName, String userId) {
-      this.partyCode = partyCode;
-      this.partyName = partyName;
-      this.userId = userId;
-    }
-
-    public String getPartyCode() {
-      return this.partyCode;
-    }
-
-    public String getPartyName() {
-      return this.partyName;
-    }
-
-    public String getUserId() {
-      return this.userId;
-    }
-  }
-
-  private static SessionDetails SESSION_DETAILS;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -56,16 +28,19 @@ public class AttendeeActivity extends Activity {
 
     Bundle b = getIntent().getExtras();
 
+    SpotifyManager.SessionDetails currentSession = null;
+
     if(b != null && b.containsKey("partyName") && b.containsKey("attendeeId") && b.containsKey("partyCode")) {
-      SESSION_DETAILS = new SessionDetails(b.getString("partyCode"), b.getString("partyName"), b.getString("userId"));
+      currentSession = SpotifyManager.getSpotifyManager().new SessionDetails(b.getString("partyCode"), b.getString("partyName"), b.getString("userId"));
+      SpotifyManager.getSpotifyManager().newSession(currentSession);
     } else {
       exitToStartScreen();
     }
 
     TextView partyNameText = (TextView) findViewById(R.id.text_show_party_name);
     TextView partyCodeText = (TextView) findViewById(R.id.text_show_party_code);
-    partyNameText.setText(SESSION_DETAILS.getPartyName());
-    partyCodeText.setText(SESSION_DETAILS.getPartyCode());
+    partyNameText.setText(currentSession.getPartyName());
+    partyCodeText.setText(currentSession.getPartyCode());
 
     if(savedInstanceState == null)
       getFragmentManager().beginTransaction().add(R.id.attendee_content, new SearchFragment()).commit();

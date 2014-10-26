@@ -2,6 +2,7 @@ package com.apadmi.partify.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 import com.apadmi.partify.R;
@@ -24,15 +26,32 @@ import java.util.ArrayList;
 public class SearchResultsAdapter extends ArrayAdapter<SearchFragment.Track> {
 
   private Context mContext;
+  private ImageLoader im;
 
   public SearchResultsAdapter(Context context, int resource, ArrayList<SearchFragment.Track> objects) {
     super(context, resource, objects);
     mContext = context;
+
+    RequestQueue queue = Volley.newRequestQueue(mContext);
+
+    im = new ImageLoader(queue, new ImageLoader.ImageCache() {
+      private final LruCache<String, Bitmap> cache = new LruCache<String, Bitmap>(30);
+
+      @Override
+      public Bitmap getBitmap(String url) {
+        return cache.get(url);
+      }
+
+      @Override
+      public void putBitmap(String url, Bitmap bitmap) {
+        cache.put(url, bitmap);
+      }
+    });
   }
 
   public View getView(int position, View convertView, ViewGroup parent) {
     TextView nameText;
-    TextView artistText;
+    final TextView artistText;
     final ImageView albumArt;
 
     if(convertView == null){
@@ -55,21 +74,23 @@ public class SearchResultsAdapter extends ArrayAdapter<SearchFragment.Track> {
     if(albumArt.getTag() != null && albumArt.getTag() instanceof ImageRequest)
       ((ImageRequest)albumArt.getTag()).cancel();
 
-    RequestQueue queue = Volley.newRequestQueue(mContext);
+
 
     String url = getItem(position).getImageURL();
 
-    ImageRequest ir = new ImageRequest(url, new Response.Listener<Bitmap>() {
+
+
+    im.get(url, new ImageLoader.ImageListener() {
+      @Override
+      public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+        albumArt.setImageBitmap(imageContainer.getBitmap());
+      }
 
       @Override
-      public void onResponse(Bitmap response) {
-        albumArt.setImageBitmap(response);
+      public void onErrorResponse(VolleyError volleyError) {
 
       }
-    }, 0, 0, null, null);
-
-    queue.add(ir);
-    albumArt.setTag(ir);
+    });
 
     return convertView;
   }

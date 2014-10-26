@@ -17,6 +17,30 @@ import com.spotify.sdk.android.playback.PlayerState;
  */
 public class SpotifyManager implements PlayerNotificationCallback, ConnectionStateCallback {
 
+  public class SessionDetails {
+    String partyCode;
+    String partyName;
+    String userId;
+
+    public SessionDetails(String partyCode, String partyName, String userId) {
+      this.partyCode = partyCode;
+      this.partyName = partyName;
+      this.userId = userId;
+    }
+
+    public String getPartyCode() {
+      return this.partyCode;
+    }
+
+    public String getPartyName() {
+      return this.partyName;
+    }
+
+    public String getUserId() {
+      return this.userId;
+    }
+  }
+
   private static SpotifyManager sSharedInstance = null;
 
   public static final String CLIENT_ID = "ae0aa20d4b694ca38dacb56c2c2298c4";
@@ -25,6 +49,8 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
   private Player mPlayer;
 
   private PlayerNotificationCallback playBackEventListener = null;
+
+  private SessionDetails currentSession;
 
   private SpotifyManager() {
 
@@ -35,6 +61,14 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
       sSharedInstance = new SpotifyManager();
 
     return sSharedInstance;
+  }
+
+  public void newSession(SessionDetails session) {
+    this.currentSession = session;
+  }
+
+  public SessionDetails getSession() {
+    return this.currentSession;
   }
 
 
