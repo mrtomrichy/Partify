@@ -45,9 +45,12 @@
         }];
     };
     
+}
+
+- (void) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     [self reload];
-    
-    
 }
 
 - (void) reload

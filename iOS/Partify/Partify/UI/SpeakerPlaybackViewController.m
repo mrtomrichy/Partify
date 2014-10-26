@@ -11,19 +11,22 @@
 #import "SpotifyManager.h"
 #import "AppDelegate.h"
 #import "PartyManager.h"
-
+#import "ServerManager.h"
 
 @interface SpeakerPlaybackViewController () <SPTAudioStreamingPlaybackDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *partyCodeLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *coverArtView;
-@property (nonatomic, strong) SpotifyManager *spotifyManager;
+@property (nonatomic, weak) SpotifyManager *spotifyManager;
 @property (nonatomic, weak) AppDelegate *appD;
+@property (nonatomic, weak) ServerManager * serverManager;
 @property (weak, nonatomic) IBOutlet UIButton *playButton;
 @property (weak, nonatomic) IBOutlet UISlider *seekBar;
 @property (nonatomic, strong) SPTAudioStreamingController *player;
 @property (nonatomic, strong) NSTimer *seekTimer;
 @property (nonatomic) BOOL seekInProgress;
 @property (nonatomic, weak) PartyManager *partyManager;
+@property (nonatomic, strong) NSTimer *pollingTimer;
+@property (nonatomic, strong) NSString *currentTrack;
 @end
 
 @implementation SpeakerPlaybackViewController
@@ -34,10 +37,45 @@
     [super viewDidLoad];
     self.appD = [UIApplication sharedApplication].delegate;
     self.spotifyManager = self.appD.spotifyManager;
+    self.serverManager = self.appD.serverManager;
     self.partyManager = self.appD.partyManager;
     self.partyCodeLabel.text = [NSString stringWithFormat:@"%@-%@", self.partyManager.partyID, self.partyManager.partyName];
-    [self playTrack];
+    
+    
+    self.pollingTimer = [NSTimer scheduledTimerWithTimeInterval:5.0f target:self selector:@selector(pollTimerFired:) userInfo:NULL repeats:YES];
+    //[self playTrack];
 }
+
+- (void) pollTimerFired: (NSTimer *) timer
+{
+    NSArray *playlist = self.partyManager.playlist;
+    if (playlist.count > 0 && self.currentTrack == nil) {
+        [self playNextTrack];
+    }
+    
+    [self updatePlaylist];
+}
+
+- (void) playNextTrack
+{
+    NSArray *playlist = self.partyManager.playlist;
+    NSInteger currentIdx = [playlist indexOfObject:self.currentTrack];
+    NSInteger nextIdx = currentIdx != NSNotFound ? currentIdx + 1 : 0;
+    NSString *nextTrack = playlist[nextIdx];
+    if (nextTrack)
+    {
+        self.currentTrack = nextTrack;
+        [self playTrackWithID:nextTrack];
+    }
+}
+
+- (void) updatePlaylist
+{
+    [self.serverManager updatePlaylistWithPartyID:self.partyManager.partyID andSuccessBlock:^(NSArray *newPlaylist) {
+        self.partyManager.playlist = newPlaylist;
+    } andFailureBlock:nil];
+}
+
 - (IBAction)playPressed:(id)sender {
     [self.player setIsPlaying:!self.player.isPlaying callback:NULL];
 }
@@ -74,7 +112,7 @@
     self.seekBar.value = newSeekValue;
 }
 
--(void)playTrack {
+-(void)playTrackWithID: (NSString *)trackID {
     
     if (self.player == nil) {
         self.player = [SPTAudioStreamingController new];
@@ -88,7 +126,7 @@
             return;
         }
         
-        [SPTRequest requestItemAtURI:[NSURL URLWithString:@"spotify:track:1Vv0MPcooEoQzVZYfKMgKW"]
+        [SPTRequest requestItemAtURI:[NSURL URLWithString:[@"spotify:track:" stringByAppendingString:trackID]]
                          withSession:self.spotifyManager.currentSession
                             callback:^(NSError *error, id object) {
                                 
@@ -112,6 +150,9 @@
         self.seekTimer = [NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(seekTimerFired:) userInfo:NULL repeats:YES];
     }
     else {
+        if (self.player.currentPlaybackPosition == [self.player.currentTrackMetadata[SPTAudioStreamingMetadataTrackDuration] doubleValue]) {
+            [self playNextTrack];
+        }
         [self.seekTimer invalidate];
     }
 }
@@ -125,7 +166,6 @@
 }
 
 - (void) audioStreaming:(SPTAudioStreamingController *)audioStreaming didChangeToTrack:(NSDictionary *)trackMetadata {
-    // TODO Next track
-    NSLog(@"Change");
+
 }
 @end
