@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.UI.WebControls.WebParts;
+using Microsoft.Ajax.Utilities;
 using Partify.Models;
 
 namespace Partify.Controllers
@@ -27,6 +28,8 @@ namespace Partify.Controllers
 
                 using (var db = new PartyContext())
                 {
+                    if (db.Parties.FirstOrDefault(x => x.Name == partyName) != null)
+                        return Unauthorized();
                     db.Attendees.Add(newAttendee);
                     db.Parties.Add(newParty);
                     db.SaveChanges();
@@ -106,14 +109,56 @@ namespace Partify.Controllers
         [System.Web.Http.HttpPost]
         public IHttpActionResult Join(string partyCode)
         {
-            var newAttendee = new Attendee {PartyCode = partyCode};
+            var newAttendee = new Attendee();
             using (var db = new PartyContext())
             {
                 db.Attendees.Add(newAttendee);
+                var party = db.Parties.Where(x => x.PartyCode == partyCode).FirstOrDefault();
+                if (party == null)
+                {
+                    return NotFound();
+                }
+
+                var partyName = db.Parties.Where(x => x.PartyCode == partyCode).FirstOrDefault().Name;
                 db.SaveChanges();
+                var response = new JoinEventResponse {AttendeeId = newAttendee.AttendeeId, PartyName = partyName};
+
+                return Ok(response);
             }
-            var response = new JoinEventResponse { AttendeeId = newAttendee.AttendeeId };
-            return Ok(response);
+        }
+
+        [Route("UpVote")]
+        [System.Web.Http.HttpPost]
+        public IHttpActionResult Upvote(string songId, string partyCode)
+        {
+            using (var db = new PartyContext())
+            {
+                var party = db.Parties.FirstOrDefault(x => x.PartyCode == partyCode);
+                if (party == null)
+                    return NotFound();
+                var song = db.Songs.FirstOrDefault(x => x.SpotifyId == songId);
+                if (song != null) song.Votes++;
+
+                var partycode = Convert.ToInt64(partyCode);
+                //get playlistsongs
+                var playlist = db.Songs.Where(x => x.PartyId == partycode);
+                //order playlist songs by votes
+                playlist.OrderBy(x => x.Votes).ThenBy(x => x.Order);
+                var increment = 1;
+                var songsList = new List<string>();
+                // set the new order
+                foreach (var orderedsong in playlist)
+                {
+                    orderedsong.Order = increment;
+                    increment++;
+                    songsList.Add(orderedsong.SpotifyId);
+                }
+                //save the database
+                db.SaveChanges();
+
+                var response = new UpVoteResponse {songIds = songsList.ToArray()};
+                return Ok(response);
+            }
         }
 
         [Route("Update")]

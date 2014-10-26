@@ -5,9 +5,8 @@ using System.Web;
 
 namespace Partify.Models
 {
-    public class JoinEventResponse
+    public class UpVoteResponse
     {
-        public string AttendeeId { get; set; }
-        public string PartyName { get; set; }
+       public string[] songIds { get; set;}
     }
 }
