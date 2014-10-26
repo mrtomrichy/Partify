@@ -7,6 +7,6 @@ namespace Partify.Models
 {
     public class UpVoteResponse
     {
-       public string[] songIds { get; set;}
+       public string[] SongIds { get; set;}
     }
 }

@@ -159,6 +159,7 @@
     <Compile Include="Models\CreateEventResponse.cs" />
     <Compile Include="Models\GetPlaylistResponse.cs" />
     <Compile Include="Models\JoinEventResponse.cs" />
+    <Compile Include="Models\UpVoteResponse.cs" />
     <Compile Include="PartyContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

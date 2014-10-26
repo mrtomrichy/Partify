@@ -156,7 +156,7 @@ namespace Partify.Controllers
                 //save the database
                 db.SaveChanges();
 
-                var response = new UpVoteResponse {songIds = songsList.ToArray()};
+                var response = new UpVoteResponse {SongIds = songsList.ToArray()};
                 return Ok(response);
             }
         }
