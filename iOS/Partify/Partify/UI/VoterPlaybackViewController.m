@@ -33,6 +33,25 @@
     self.playlistTable.delegate = self.playlistProvider;
     self.playlistTable.dataSource = self.playlistProvider;
     
+    __weak VoterPlaybackViewController *wSelf = self;
+    self.playlistProvider.playlistItemSelectedBlock = ^(NSString * item)
+    {
+        [wSelf.serverManager voteForSong:item withPartyID:wSelf.partyManager.partyID andSuccessBlock:^(NSArray *fleh){
+            wSelf.playlistProvider.playlist = fleh;
+            [wSelf.playlistTable reloadData];
+            //[wSelf reload];
+        } andFailureBlock:^(NSError *error) {
+            
+        }];
+    };
+    
+    [self reload];
+    
+    
+}
+
+- (void) reload
+{
     [self.serverManager updatePlaylistWithPartyID:self.partyManager.partyID andSuccessBlock:^(NSArray *newPlaylist) {
         self.playlistProvider.playlist = newPlaylist;
         self.partyManager.playlist = newPlaylist;
