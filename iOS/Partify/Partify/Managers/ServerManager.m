@@ -12,7 +12,7 @@
 
 const NSString *SERVER_ROOT = @"http://partify.apphb.com/api/";
 const NSString *ENDPOINT_CREATE = @"Party/Create";
-const NSString *ENDPOINT_PLAYLIST = @"Party/Playlist";
+const NSString *ENDPOINT_PLAYLIST = @"Party/GetPlaylist";
 const NSString *ENDPOINT_VOTE = @"Party/Vote";
 const NSString *ENDPOINT_JOIN = @"Party/Join";
 
@@ -31,13 +31,12 @@ const NSString *ENDPOINT_JOIN = @"Party/Join";
 
 - (void) updatePlaylistWithPartyID: (NSString *) partyID andSuccessBlock: (updatePlaylistSuccessBlock) successBlock andFailureBlock: (requestFailureBlock) failureBlock
 {
-//    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-//    [manager POST:[NSString stringWithFormat:@"%@/%@?partyName=%@", SERVER_ROOT, ENDPONT_CREATE, partyName] parameters:NULL success:^(AFHTTPRequestOperation *operation, id responseObject) {
-//        NSString *eventToken = responseObject[@"token"];
-//        successBlock(partyName, eventToken);
-//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//        failureBlock(error);
-//    }];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:[NSString stringWithFormat:@"%@/%@?partyCodePlaylist=%@", SERVER_ROOT, ENDPOINT_PLAYLIST, partyID] parameters:NULL success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        successBlock(responseObject[@"SpotifyIds"]);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        failureBlock(error);
+    }];
 }
 - (void) voteForSong: (NSString *) songID withPartyID: (NSString *) partyID andSuccessBlock: (votePlaylistSuccessBlock)successBlock andFailureBlock:(requestFailureBlock) failureBlock
 {
