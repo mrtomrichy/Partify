@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Web.Http.Results;
 using System.Web.Mvc;
 using System.Web.UI.WebControls.WebParts;
 using Microsoft.Ajax.Utilities;
@@ -136,19 +138,22 @@ namespace Partify.Controllers
             using (var db = new PartyContext())
             {
                 var party = db.Parties.FirstOrDefault(x => x.PartyCode == partyCode);
+
                 if (party == null)
                     return NotFound();
-                var song = db.Songs.FirstOrDefault(x => x.SpotifyId == songId);
-                if (song != null) song.Votes++;
 
                 var partycode = Convert.ToInt64(partyCode);
+                var song = db.Songs.FirstOrDefault(x => x.SpotifyId == songId && x.PartyId == partycode);
+
+                if (song != null) song.Votes++;
+               
                 //get playlistsongs
                 var playlist = db.Songs.Where(x => x.PartyId == partycode).OrderBy(x => x.Votes).ThenBy(x => x.Order);
                 //order playlist songs by votes
                 var increment = 1;
                 var songsList = new List<string>();
                 // set the new order
-                foreach (var orderedsong in db.Songs.Where(x => x.PartyId == partycode))
+                foreach (var orderedsong in playlist)
                 {
                     orderedsong.Order = increment;
                     increment++;
