@@ -3,13 +3,12 @@ package com.apadmi.partify.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.apadmi.partify.R;
 import com.apadmi.partify.spotify.SpotifyManager;
+import com.apadmi.partify.ui.fragments.PlaylistFragment;
 import com.apadmi.partify.ui.fragments.SearchFragment;
 
 /**
@@ -43,17 +42,19 @@ public class AttendeeActivity extends Activity {
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater inflater = getMenuInflater();
-    inflater.inflate(R.menu.attendee_menu, menu);
-    return true;
-  }
-
-  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.attendee_menu_exit:
+      case R.id.search_menu_exit:
         exitToStartScreen();
+        break;
+      case R.id.playlist_menu_exit:
+        exitToStartScreen();
+        break;
+      case R.id.search_menu_playlist:
+        getFragmentManager().beginTransaction().replace(R.id.attendee_content, new PlaylistFragment()).commit();
+        break;
+      case R.id.playlist_menu_search:
+        getFragmentManager().beginTransaction().replace(R.id.attendee_content, new SearchFragment()).commit();
         break;
     }
     return true;

@@ -7,6 +7,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -48,6 +50,7 @@ public class SearchFragment extends Fragment {
   public SearchFragment() {
     if (trackList == null)
       trackList = new ArrayList<Track>();
+    this.setHasOptionsMenu(true);
   }
 
   @Override
@@ -141,7 +144,7 @@ public class SearchFragment extends Fragment {
                 String uri = items.getJSONObject(i).getString("id");
 
                 JSONArray images = items.getJSONObject(i).getJSONObject("album").getJSONArray("images");
-                String imageURL = images.getJSONObject(images.length()-1).getString("url");
+                String imageURL = images.getJSONObject(images.length() - 1).getString("url");
                 trackList.add(new Track(name, artists, uri, imageURL));
               }
 
@@ -183,7 +186,7 @@ public class SearchFragment extends Fragment {
         new Response.Listener<JSONObject>() {
           @Override
           public void onResponse(JSONObject response) {
-             Log.e("GUNE", response.toString());
+            Log.e("GUNE", response.toString());
           }
         },
         new Response.ErrorListener() {
@@ -194,5 +197,12 @@ public class SearchFragment extends Fragment {
         });
 
     queue.add(jsObjRequest);
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    menu.clear();
+    inflater.inflate(R.menu.search_menu, menu);
   }
 }
