@@ -26,6 +26,8 @@
 @property (nonatomic) BOOL seekInProgress;
 @property (nonatomic, weak) PartyManager *partyManager;
 @property (nonatomic, strong) NSTimer *pollingTimer;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *artistLabel;
 @property (nonatomic, strong) NSString *currentTrack;
 @end
 
@@ -141,6 +143,53 @@
     }];
 }
 
+- (void) loadMetadata
+{
+    if (self.player.currentTrackMetadata == nil) {
+        self.coverArtView.image = nil;
+        self.titleLabel.hidden = YES;
+        self.artistLabel.hidden = YES;
+        return;
+    }
+    
+    self.titleLabel.hidden = NO;
+    self.artistLabel.hidden = NO;
+    
+    self.artistLabel.text = [self.player.currentTrackMetadata valueForKey:SPTAudioStreamingMetadataArtistName];
+    self.titleLabel.text = [self.player.currentTrackMetadata valueForKey:SPTAudioStreamingMetadataTrackName];
+    
+    [SPTAlbum albumWithURI:[NSURL URLWithString:[self.player.currentTrackMetadata valueForKey:SPTAudioStreamingMetadataAlbumURI]]
+                   session:self.spotifyManager.currentSession
+                  callback:^(NSError *error, SPTAlbum *album) {
+                      
+                      NSURL *imageURL = album.largestCover.imageURL;
+                      if (imageURL == nil) {
+                          NSLog(@"Album %@ doesn't have any images!", album);
+                          self.coverArtView.image = nil;
+                          return;
+                      }
+                      
+                      // Pop over to a background queue to load the image over the network.
+                      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                          NSError *error = nil;
+                          UIImage *image = nil;
+                          NSData *imageData = [NSData dataWithContentsOfURL:imageURL options:0 error:&error];
+                          
+                          if (imageData != nil) {
+                              image = [UIImage imageWithData:imageData];
+                          }
+                          
+                          // …and back to the main queue to display the image.
+                          dispatch_async(dispatch_get_main_queue(), ^{
+                              self.coverArtView.image = image;
+                              if (image == nil) {
+                                  NSLog(@"Couldn't load cover image with error: %@", error);
+                              }
+                          });
+                      });
+                  }];
+}
+
 #pragma mark - Track Player Delegates
 -(void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didChangePlaybackStatus:(BOOL)isPlaying
 {
@@ -166,6 +215,6 @@
 }
 
 - (void) audioStreaming:(SPTAudioStreamingController *)audioStreaming didChangeToTrack:(NSDictionary *)trackMetadata {
-
+    [self loadMetadata];
 }
 @end
