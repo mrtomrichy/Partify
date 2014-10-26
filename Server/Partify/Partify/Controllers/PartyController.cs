@@ -148,7 +148,7 @@ namespace Partify.Controllers
                 if (song != null) song.Votes++;
                
                 //get playlistsongs
-                var playlist = db.Songs.Where(x => x.PartyId == partycode).OrderBy(x => x.Votes).ThenBy(x => x.Order);
+                var playlist = db.Songs.Where(x => x.PartyId == partycode).OrderByDescending(x => x.Votes).ThenByDescending(x => x.Order);
                 //order playlist songs by votes
                 var increment = 1;
                 var songsList = new List<string>();
