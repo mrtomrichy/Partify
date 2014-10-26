@@ -21,7 +21,6 @@ NSString * const ENDPOINT_SEARCH = @"https://api.spotify.com/v1/search?q=%@&type
 @implementation ServerManager
 - (void) createPartyWithName: (NSString *) partyName andSuccessBlock: (createPartySuccessBlock) successBlock andFailureBlock:(requestFailureBlock) failureBlock
 {
-    // TODO Url encode the party name
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager POST:[NSString stringWithFormat:@"%@/%@?partyName=%@", SERVER_ROOT, ENDPOINT_CREATE, [partyName stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] parameters:NULL success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSString *eventToken = responseObject[@"PartyCode"];
@@ -35,7 +34,12 @@ NSString * const ENDPOINT_SEARCH = @"https://api.spotify.com/v1/search?q=%@&type
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager GET:[NSString stringWithFormat:@"%@/%@?partyCodePlaylist=%@", SERVER_ROOT, ENDPOINT_PLAYLIST, partyID] parameters:NULL success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        successBlock(responseObject[@"SpotifyIds"]);
+        if (((NSDictionary *)responseObject).count == 0) {
+            successBlock(@[]);
+        }
+        else {
+            successBlock(responseObject[@"SpotifyIds"]);
+        }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         failureBlock(error);
     }];
