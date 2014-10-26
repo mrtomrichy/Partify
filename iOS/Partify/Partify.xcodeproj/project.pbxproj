@@ -19,6 +19,7 @@
 		361D3D5719FC2073000711C0 /* PartyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 361D3D5619FC2073000711C0 /* PartyManager.m */; };
 		361D3D5A19FC6EE7000711C0 /* PlaylistProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 361D3D5919FC6EE7000711C0 /* PlaylistProvider.m */; };
 		361D3D5D19FC86D2000711C0 /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 361D3D5C19FC86D2000711C0 /* SearchViewController.m */; };
+		361D3D6019FCB05E000711C0 /* SearchResultsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 361D3D5F19FCB05E000711C0 /* SearchResultsProvider.m */; };
 		36EECCE819FBA8B200A15F93 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 36EECCE719FBA8B200A15F93 /* main.m */; };
 		36EECCEB19FBA8B200A15F93 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 36EECCEA19FBA8B200A15F93 /* AppDelegate.m */; };
 		36EECCEE19FBA8B200A15F93 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36EECCED19FBA8B200A15F93 /* ViewController.m */; };
@@ -62,6 +63,8 @@
 		361D3D5919FC6EE7000711C0 /* PlaylistProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistProvider.m; sourceTree = "<group>"; };
 		361D3D5B19FC86D2000711C0 /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchViewController.h; sourceTree = "<group>"; };
 		361D3D5C19FC86D2000711C0 /* SearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchViewController.m; sourceTree = "<group>"; };
+		361D3D5E19FCB05E000711C0 /* SearchResultsProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchResultsProvider.h; sourceTree = "<group>"; };
+		361D3D5F19FCB05E000711C0 /* SearchResultsProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResultsProvider.m; sourceTree = "<group>"; };
 		36EECCE219FBA8B200A15F93 /* Partify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Partify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36EECCE619FBA8B200A15F93 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		36EECCE719FBA8B200A15F93 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -177,6 +180,8 @@
 				36EECCE519FBA8B200A15F93 /* Supporting Files */,
 				361D3D5819FC6EE7000711C0 /* PlaylistProvider.h */,
 				361D3D5919FC6EE7000711C0 /* PlaylistProvider.m */,
+				361D3D5E19FCB05E000711C0 /* SearchResultsProvider.h */,
+				361D3D5F19FCB05E000711C0 /* SearchResultsProvider.m */,
 			);
 			path = Partify;
 			sourceTree = "<group>";
@@ -357,6 +362,7 @@
 				361D3D3C19FBCF08000711C0 /* SpotifyManager.m in Sources */,
 				361D3D5719FC2073000711C0 /* PartyManager.m in Sources */,
 				361D3D4B19FBEE0C000711C0 /* SpeakerPlaybackViewController.m in Sources */,
+				361D3D6019FCB05E000711C0 /* SearchResultsProvider.m in Sources */,
 				361D3D4519FBE9F5000711C0 /* SpeakerViewController.m in Sources */,
 				361D3D5119FC0444000711C0 /* SpeakerPlaylistViewController.m in Sources */,
 				361D3D5A19FC6EE7000711C0 /* PlaylistProvider.m in Sources */,

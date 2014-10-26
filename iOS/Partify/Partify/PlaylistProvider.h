@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+typedef void(^playlistItemSelected)(NSString *item);
 @interface PlaylistProvider : NSObject  <UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) NSArray *playlist;
+@property (copy) playlistItemSelected playlistItemSelectedBlock;
 @end

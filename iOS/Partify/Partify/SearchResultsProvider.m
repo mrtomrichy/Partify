@@ -1,35 +1,30 @@
 //
-//  PlaylistProvider.m
+//  SearchResultsProvider.m
 //  Partify
 //
 //  Created by Matt Malone on 26/10/2014.
 //  Copyright (c) 2014 Apadmi Ltd. All rights reserved.
 //
 
-#import "PlaylistProvider.h"
+#import "SearchResultsProvider.h"
 
-@interface PlaylistProvider ()
-
-@end
-
-@implementation PlaylistProvider
+@implementation SearchResultsProvider
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"rrererere"];
-    cell.textLabel.text = self.playlist[indexPath.row];
+    cell.textLabel.text = self.results[indexPath.row][@"name"];
     return cell;
 }
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.playlist.count;
+    return self.results.count;
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.playlistItemSelectedBlock)
-    {
-        self.playlistItemSelectedBlock(self.playlist[indexPath.row]);
+    if (self.selectedItemBlock) {
+        self.selectedItemBlock(self.results[indexPath.row]);
     }
 }
 @end
