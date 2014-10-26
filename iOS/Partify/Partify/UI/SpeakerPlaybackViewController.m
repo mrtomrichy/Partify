@@ -48,6 +48,11 @@
     //[self playTrack];
 }
 
+- (void) viewWillAppear:(BOOL)animated
+{
+    [self pollTimerFired:NULL];
+}
+
 - (void) pollTimerFired: (NSTimer *) timer
 {
     NSArray *playlist = self.partyManager.playlist;

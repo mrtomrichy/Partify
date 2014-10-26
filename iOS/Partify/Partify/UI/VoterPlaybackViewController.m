@@ -18,6 +18,7 @@
 @property (nonatomic, weak) AppDelegate *appD;
 @property (nonatomic, weak) ServerManager *serverManager;
 @property (nonatomic, weak) PartyManager *partyManager;
+@property (nonatomic, strong) NSTimer *timer;
 @end
 
 @implementation VoterPlaybackViewController
@@ -45,6 +46,14 @@
         }];
     };
     
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:5.0f target:self selector:@selector(updateFired:) userInfo:NULL
+                                                 repeats:YES];
+    
+}
+
+- (void) updateFired: (NSTimer *) timer
+{
+    [self reload];
 }
 
 - (void) viewWillAppear:(BOOL)animated
@@ -64,6 +73,11 @@
             [[[UIAlertView alloc] initWithTitle:@"Error" message:[error description] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         });
     }];
+}
+
+- (void) dealloc
+{
+    [self.timer invalidate];
 }
 
 @end

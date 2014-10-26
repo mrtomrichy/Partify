@@ -19,7 +19,7 @@
 @property (nonatomic, weak) AppDelegate *appD;
 @property (nonatomic, weak) ServerManager *serverManager;
 @property (nonatomic, weak) PartyManager *partyManager;
-
+@property (nonatomic, strong) NSTimer *timer;
 @end
 
 @implementation SpeakerPlaylistViewController
@@ -35,6 +35,19 @@
     self.playlistTableView.delegate = self.playlistProvider;
     self.playlistTableView.dataSource = self.playlistProvider;
     
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:5.0f target:self selector:@selector(updateFired:) userInfo:nil repeats:YES];
+    
+    [self loadPlaylist];
+    
+}
+
+- (void) updateFired: (NSTimer *) timer
+{
+    [self loadPlaylist];
+}
+
+- (void) loadPlaylist
+{
     [self.serverManager updatePlaylistWithPartyID:self.partyManager.partyID andSuccessBlock:^(NSArray *newPlaylist) {
         self.partyManager.playlist = newPlaylist;
         self.playlistProvider.playlist = newPlaylist;
@@ -44,21 +57,12 @@
             [[[UIAlertView alloc] initWithTitle:@"Error" message:[error description] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         });
     }];
-    
 }
 
 - (IBAction)closePressed:(id)sender {
+    [self.timer invalidate];
     [self.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
