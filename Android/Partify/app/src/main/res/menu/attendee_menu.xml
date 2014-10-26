@@ -4,10 +4,4 @@
         android:orderInCategory="100"
         android:showAsAction="always"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"/>
-
-    <item android:id="@+id/attendee_menu_add"
-          android:title="Add"
-          android:orderInCategory="100"
-          android:showAsAction="always"
-          android:icon="@android:drawable/ic_menu_add"/>
 </menu>

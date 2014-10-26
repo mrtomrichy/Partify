@@ -16,19 +16,19 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 import com.apadmi.partify.R;
-import com.apadmi.partify.ui.fragments.SearchFragment;
+import com.apadmi.partify.spotify.Track;
 
 import java.util.ArrayList;
 
 /**
  * Created by tom on 26/10/14.
  */
-public class SearchResultsAdapter extends ArrayAdapter<SearchFragment.Track> {
+public class SearchResultsAdapter extends ArrayAdapter<Track> {
 
   private Context mContext;
   private ImageLoader im;
 
-  public SearchResultsAdapter(Context context, int resource, ArrayList<SearchFragment.Track> objects) {
+  public SearchResultsAdapter(Context context, int resource, ArrayList<Track> objects) {
     super(context, resource, objects);
     mContext = context;
 

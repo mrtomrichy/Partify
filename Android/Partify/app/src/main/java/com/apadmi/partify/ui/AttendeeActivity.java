@@ -49,7 +49,7 @@ public class AttendeeActivity extends Activity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater = getMenuInflater();
-    inflater.inflate(R.menu.player_menu, menu);
+    inflater.inflate(R.menu.attendee_menu, menu);
     return true;
   }
 
@@ -59,14 +59,13 @@ public class AttendeeActivity extends Activity {
       case R.id.attendee_menu_exit:
         exitToStartScreen();
         break;
-      case R.id.attendee_menu_add:
-        break;
     }
     return true;
   }
 
   private void exitToStartScreen() {
     startActivity(new Intent(this, StartActivity.class));
+    SpotifyManager.getSpotifyManager().endSession();
     finish();
   }
 

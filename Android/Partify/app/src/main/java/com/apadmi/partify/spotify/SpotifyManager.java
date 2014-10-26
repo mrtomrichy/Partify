@@ -71,6 +71,10 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
     return this.currentSession;
   }
 
+  public void endSession() {
+    this.currentSession = null;
+  }
+
 
   public static Connectivity getNetworkConnectivity(Context context) {
     ConnectivityManager connectivityManager;
