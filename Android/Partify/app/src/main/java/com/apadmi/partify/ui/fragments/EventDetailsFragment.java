@@ -130,7 +130,7 @@ public class EventDetailsFragment extends Fragment {
   }
 
   private void startParty() {
-    showProgress("Logging the fuck in");
+    showProgress("Starting Party");
     SpotifyAuthentication.openAuthWindow(SpotifyManager.CLIENT_ID, "token", SpotifyManager.REDIRECT_URI,
         new String[]{"user-read-private", "streaming"},
         null, getActivity());

@@ -27,14 +27,14 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
+            android:text="Loading"
             android:id="@+id/list_item_name"/>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
+            android:text="Loading"
             android:id="@+id/list_item_artist"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="4dp"

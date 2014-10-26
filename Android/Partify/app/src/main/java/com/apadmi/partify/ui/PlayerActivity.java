@@ -4,21 +4,38 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.Volley;
 import com.apadmi.partify.R;
+import com.apadmi.partify.adapters.NowPlayingAdapter;
 import com.apadmi.partify.spotify.SpotifyManager;
 import com.spotify.sdk.android.playback.Player;
 import com.spotify.sdk.android.playback.PlayerNotificationCallback;
 import com.spotify.sdk.android.playback.PlayerState;
 import com.spotify.sdk.android.playback.PlayerStateCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -37,16 +54,31 @@ public class PlayerActivity extends Activity implements PlayerNotificationCallba
   private String partyCode;
 
   private ImageView playButton;
+  private ImageView nextButton;
   private Player mPlayer;
   private SeekBar mSeekBar;
 
   private ScheduledExecutorService scheduler;
+  private ScheduledExecutorService playlistScheduler;
 
   private Runnable seekUpdater = new Runnable() {
     public void run() {
       mPlayer.getPlayerState(PlayerActivity.this);
     }
   };
+
+  private Runnable playlistUpdater = new Runnable() {
+    public void run() {
+      getTracks();
+    }
+  };
+
+  private ArrayList<String> tracks;
+
+  private String currentTrack = "";
+
+  private ListView playlistList;
+  private NowPlayingAdapter mAdapter;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -58,9 +90,13 @@ public class PlayerActivity extends Activity implements PlayerNotificationCallba
 
     Bundle b = getIntent().getExtras();
 
-    if(b != null) {
+    if (b != null) {
       partyCode = b.containsKey("partyCode") ? b.getString("partyCode") : "";
     }
+
+    tracks = new ArrayList<String>();
+
+    startUpdatingPlaylist();
 
     TextView partyCodeText = (TextView) findViewById(R.id.text_party_code);
     partyCodeText.setText("Party Code: " + partyCode);
@@ -75,7 +111,7 @@ public class PlayerActivity extends Activity implements PlayerNotificationCallba
       @Override
       public void onClick(View view) {
         if (state == PlayState.STOPPED) {
-          mPlayer.play("spotify:track:2ahnofp2LbBWDXcJbMaSTu");
+          mPlayer.play(tracks);
         } else if (state == PlayState.PLAYING) {
           mPlayer.pause();
           state = PlayState.PAUSED;
@@ -85,6 +121,14 @@ public class PlayerActivity extends Activity implements PlayerNotificationCallba
         }
 
         setPlayImage();
+      }
+    });
+
+    nextButton = (ImageView) findViewById(R.id.button_next);
+    nextButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        mPlayer.skipToNext();
       }
     });
 
@@ -109,19 +153,78 @@ public class PlayerActivity extends Activity implements PlayerNotificationCallba
     mSeekBar.setMax(100);
     mSeekBar.setProgress(0);
 
+    playlistList = (ListView) findViewById(R.id.list_currently_playing);
+    if(mAdapter == null)
+      mAdapter = new NowPlayingAdapter(this, 0, tracks);
+
+    playlistList.setAdapter(mAdapter);
+
     SpotifyManager.getSpotifyManager().setListener(this);
+  }
+
+  private void getTracks() {
+    RequestQueue queue = Volley.newRequestQueue(this);
+
+    String url = "";
+    try {
+      url = String.format("http://partify.apphb.com/api/party/GetPlaylist?partyCodePlaylist=%s",
+          URLEncoder.encode(partyCode, "UTF-8"));
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
+
+    JsonRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+        new Response.Listener<JSONObject>() {
+          @Override
+          public void onResponse(JSONObject response) {
+            try {
+              tracks.clear();
+              JSONArray ids = response.getJSONArray("SpotifyIds");
+              for (int i = 0; i < ids.length(); i++) {
+                Log.e("TRACKS", ids.getString(i));
+                tracks.add("spotify:track:"+ids.getString(i));
+                mAdapter.notifyDataSetChanged();
+              }
+            } catch (JSONException ex) {
+            }
+          }
+        },
+        new Response.ErrorListener() {
+          @Override
+          public void onErrorResponse(VolleyError error) {
+
+          }
+        });
+
+    queue.add(jsObjRequest);
   }
 
   private void play(PlayerState playerState) {
     state = PlayState.PLAYING;
+    currentTrack = playerState.trackUri;
+    SpotifyManager.getSpotifyManager().setCurrentlyPlaying(currentTrack);
     mSeekBar.setMax(playerState.durationInMs);
     mSeekBar.setProgress(playerState.positionInMs);
+    mAdapter.notifyDataSetChanged();
     startUpdatingSeekBar();
   }
 
   private void pause() {
     state = PlayState.PAUSED;
     stopUpdatingSeekBar();
+  }
+
+  private void startUpdatingPlaylist() {
+    if (playlistScheduler != null)
+      playlistScheduler.shutdown();
+    playlistScheduler = Executors.newSingleThreadScheduledExecutor();
+    playlistScheduler.scheduleAtFixedRate(playlistUpdater, 0, 5, TimeUnit.SECONDS);
+  }
+
+  private void stopUpdatingPlaylist() {
+    if (playlistScheduler != null)
+      playlistScheduler.shutdown();
+    playlistScheduler = null;
   }
 
   private void startUpdatingSeekBar() {
@@ -132,7 +235,7 @@ public class PlayerActivity extends Activity implements PlayerNotificationCallba
   }
 
   private void stopUpdatingSeekBar() {
-    if(scheduler != null)
+    if (scheduler != null)
       scheduler.shutdown();
     scheduler = null;
   }
@@ -167,6 +270,14 @@ public class PlayerActivity extends Activity implements PlayerNotificationCallba
       case PAUSE:
         pause();
         break;
+      case SKIP_NEXT:
+        if(state == PlayState.PLAYING)
+          mPlayer.play(tracks, tracks.indexOf(currentTrack)+1);
+        play(playerState);
+        break;
+      case TRACK_CHANGED:
+        play(playerState);
+        break;
     }
 
     setPlayImage();
@@ -178,6 +289,7 @@ public class PlayerActivity extends Activity implements PlayerNotificationCallba
   }
 
   public void onDestroy() {
+    stopUpdatingPlaylist();
     SpotifyManager.getSpotifyManager().destroyPlayer();
     super.onDestroy();
   }

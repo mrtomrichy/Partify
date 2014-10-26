@@ -3,8 +3,6 @@ package com.apadmi.partify.ui.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.android.volley.Request;
@@ -63,29 +62,7 @@ public class SearchFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View root = inflater.inflate(R.layout.fragment_attendee_search, container, false);
 
-    EditText searchBox = (EditText) root.findViewById(R.id.text_search_track);
-    searchBox.addTextChangedListener(new TextWatcher() {
-      @Override
-      public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-      }
-
-      @Override
-      public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-        if (charSequence.length() > 0) {
-          searchForTrack(charSequence.toString());
-        } else {
-          trackList.clear();
-          mAdapter.notifyDataSetChanged();
-        }
-
-      }
-
-      @Override
-      public void afterTextChanged(Editable editable) {
-
-      }
-    });
+    final EditText searchBox = (EditText) root.findViewById(R.id.text_search_track);
 
     resultsList = (ListView) root.findViewById(R.id.list_search_results);
 
@@ -99,6 +76,14 @@ public class SearchFragment extends Fragment {
       public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Track selected = trackList.get(i);
         request(selected);
+      }
+    });
+
+    ImageView searchButton = (ImageView) root.findViewById(R.id.image_search);
+    searchButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        searchForTrack(searchBox.getText().toString());
       }
     });
 

@@ -52,6 +52,8 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
 
   private SessionDetails currentSession;
 
+  private String currentlyPlaying;
+
   private SpotifyManager() {
 
   }
@@ -85,6 +87,14 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
     } else {
       return Connectivity.OFFLINE;
     }
+  }
+
+  public void setCurrentlyPlaying(String playing) {
+    this.currentlyPlaying = playing;
+  }
+
+  public String getCurrentlyPlaying() {
+    return this.currentlyPlaying;
   }
 
   public void setSpotify(Spotify spotify, final Context appContext) {
