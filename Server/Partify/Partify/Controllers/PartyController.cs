@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Mvc;
 using System.Web.UI.WebControls.WebParts;
 using Microsoft.Ajax.Utilities;
@@ -12,6 +13,7 @@ using Partify.Models;
 namespace Partify.Controllers
 {
     [RoutePrefix("api/Party")]
+    [EnableCors(origins: "http://partify.apphb.com", headers: "*", methods: "*")]
     public class PartyController : ApiController
     {
         //
@@ -141,13 +143,12 @@ namespace Partify.Controllers
 
                 var partycode = Convert.ToInt64(partyCode);
                 //get playlistsongs
-                var playlist = db.Songs.Where(x => x.PartyId == partycode);
+                var playlist = db.Songs.Where(x => x.PartyId == partycode).OrderBy(x => x.Votes).ThenBy(x => x.Order);
                 //order playlist songs by votes
-                playlist.OrderBy(x => x.Votes).ThenBy(x => x.Order);
                 var increment = 1;
                 var songsList = new List<string>();
                 // set the new order
-                foreach (var orderedsong in playlist)
+                foreach (var orderedsong in db.Songs.Where(x => x.PartyId == partycode))
                 {
                     orderedsong.Order = increment;
                     increment++;
