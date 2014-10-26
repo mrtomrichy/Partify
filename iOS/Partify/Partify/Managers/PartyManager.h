@@ -11,4 +11,5 @@
 @interface PartyManager : NSObject
 @property (nonatomic, copy) NSString *partyID;
 @property (nonatomic, copy) NSString *partyName;
+@property (nonatomic, strong) NSArray *playlist;
 @end
