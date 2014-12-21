@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="8dp"
+              android:gravity="center_vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/list_item_album_art"
+            android:layout_marginRight="8dp"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Loading"
+            android:id="@+id/list_item_name"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Loading"
+            android:id="@+id/list_item_artist"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="sans-serif-normal"/>
+    </LinearLayout>
+
+</LinearLayout>
